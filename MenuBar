@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwellverse CRM</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/ics@0.3.1/ics.min.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0; padding: 20px; background-color: #f0f2f5; color: #1d1d1f;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .crm-container {
+            background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
+            border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%; max-width: 1100px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .auth-section, .app-section { width: 100%; }
+        h1, h2, h3 { color: #1d1d1f; margin-top: 0; }
+        h2 { border-bottom: 1px solid #d1d1d6; padding-bottom: 12px; margin-bottom: 25px; font-size: 1.8em; }
+        h3 { font-size: 1.4em; margin-bottom: 15px; }
+
+        input[type="email"], input[type="password"], input[type="text"], input[type="date"], input[type="tel"], input[type="url"], select, textarea {
+            width: calc(100% - 22px);
+            padding: 10px; margin-bottom: 15px;
+            border: 1px solid #c7c7cc;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background-color: rgba(245, 245, 247, 0.8);
+        }
+        textarea { min-height: 70px; resize: vertical; }
+        button {
+            background-color: #007aff; color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; font-size: 0.95em; cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease; font-weight: 500;
+        }
+        button:hover { background-color: #005ecb; }
+        button:active { transform: scale(0.98); }
+        button.danger { background-color: #ff3b30; }
+        button.danger:hover { background-color: #d92c28; }
+        button.secondary { background-color: #6c757d; }
+        button.secondary:hover { background-color: #5a6268; }
+
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em;}
+        .form-group-radio { display: flex; align-items: center; gap: 15px; margin-bottom: 18px;}
+        .form-group-radio label { margin-bottom: 0; font-weight: normal;}
+        .form-group-radio input[type="radio"] { width: auto; margin-right: 5px; margin-bottom: 0;}
+
+        .modal-form-row { display: flex; gap: 20px; margin-bottom: 0; }
+        .modal-form-row .form-group { flex: 1; margin-bottom: 18px; }
+
+        .dashboard-charts { display: flex; justify-content: space-around; flex-wrap: wrap; margin-bottom: 35px; gap: 25px; }
+        .chart-container {
+            width: 46%; min-width: 320px; height: auto;
+            background-color: rgba(255, 255, 255, 0.75); padding: 20px; border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); display: flex; flex-direction: column;
+        }
+        .chart-container h3 { text-align: center; margin-bottom: 15px; flex-shrink: 0; font-size: 1.2em; }
+        .chart-canvas-wrapper { height: 320px; width: 100%; margin-bottom: 10px; }
+        .chart-canvas-wrapper canvas { max-width: 100%; max-height: 100%;}
+
+        .custom-legend-container {
+            display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap;
+            padding-top: 10px; border-top: 1px solid #e0e0e0; margin-top: 10px; width: 100%;
+        }
+        .legend-item { display: flex; align-items: center; margin: 3px 8px; font-size: 0.8em; color: #333; }
+        .legend-color-swatch {
+            width: 12px; height: 12px; border-radius: 3px; margin-right: 6px;
+            display: inline-block; border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .quick-add-forms-container { display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 25px; }
+        .quick-add-form-wrapper {
+            flex:1; min-width: 340px; display: flex; flex-direction: column;
+            background-color: rgba(240,240,245,0.75); padding:20px; border-radius:12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+        .quick-add-form-content { flex-grow: 1; }
+        .quick-add-form-wrapper h3 { font-size: 1.3em; margin-bottom: 18px;}
+        .quick-add-form-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: auto; padding-top: 15px; gap: 10px;
+        }
+        .quick-add-form-actions button { flex-basis: 48%; }
+
+        .premade-task-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .premade-task-buttons button {
+            font-size: 0.85em; padding: 6px 10px; background-color: #e9ecef; color: #495057;
+            border: 1px solid #ced4da;
+        }
+        .premade-task-buttons button:hover { background-color: #d1d6db; }
+
+        .lead-grid-controls {
+            display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding: 15px;
+            background-color: rgba(230,230,235,0.6); border-radius: 10px;
+        }
+        .lead-grid-controls .filter-group { display: flex; align-items: center; gap: 8px; }
+        .lead-grid-controls label { margin-bottom: 0; font-size: 0.9em; }
+        .lead-grid-controls select { width: auto; min-width: 150px; padding: 8px 10px; margin-bottom: 0; font-size: 0.9em;}
+        
+        #leadsGridContainer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+        }
+        .lead-card {
+            background-color: #ffffff; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e5e5e5; display: flex; flex-direction: column;
+        }
+        .lead-card h4 { margin-top: 0; margin-bottom: 8px; color: #007aff; font-size: 1.25em;}
+        .lead-card p { margin-bottom: 5px; font-size: 0.9em; line-height: 1.5;}
+        .lead-card .actions { margin-top: auto; padding-top: 10px; border-top: 1px solid #f0f0f0;}
+        .lead-card .actions button { padding: 6px 12px; font-size: 0.85em; margin-right: 6px;}
+
+        .kanban-board { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 18px; min-height: 250px; }
+        .kanban-column {
+            background-color: rgba(230, 230, 235, 0.75); border-radius: 10px; padding: 12px;
+            min-width: 300px; flex-shrink: 0; display: flex; flex-direction: column;
+        }
+        .kanban-column h3 { font-size: 1.2em; text-align: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #c7c7cc; flex-shrink: 0; }
+        .kanban-column .cards-container { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        .kanban-card {
+            background-color: white; border-radius: 8px; padding: 12px; margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: grab;
+        }
+        .kanban-card h5 { margin: 0 0 6px 0; color: #007aff; font-size: 1.05em;}
+        .kanban-card p { font-size: 0.88em; margin: 0; line-height: 1.4;}
+
+        #calendarSection { display: flex; flex-direction: column; }
+        .calendar-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; align-items: center;}
+        .calendar-controls label { font-size: 0.9em; margin-right: 5px;}
+        .calendar-controls select { font-size: 0.9em; padding: 8px 12px;}
+        #taskCalendar { min-height: 500px; background-color: #fff; padding:10px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.08);}
+        .calendar-export-button-container { text-align: center; margin-top: 20px; }
+        .fc-event { cursor: grab !important; }
+        .fc-event:active { cursor: grabbing !important; }
+
+        #loadingIndicator {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.75); color: white; padding: 25px;
+            border-radius: 10px; z-index: 10000; display: none; font-size: 1.1em; align-items: center; justify-content: center;
+        }
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.65);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto;
+            padding: 25px;
+            border: 1px solid #bbb; width: 90%; max-width: 750px;
+            border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .close-button { color: #888; float: right; font-size: 30px; font-weight: bold; }
+        .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
+            position: relative;
+        }
+        #userProfileCircle {
+            width: 40px; height: 40px; border-radius: 50%; background-color: #007aff;
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1em; font-weight: 500; text-transform: uppercase; flex-shrink: 0;
+        }
+        .auth-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #authLogo {
+            max-height: 50px;
+            margin-right: 15px;
+        }
+        .app-header-banner-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 0;
+        }
+        #headerBannerLogo {
+            max-height: 40px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        #currentTasksListContainer { /* Styles for this specific container */ }
+        #currentTasksList {
+            list-style: none;
+            padding: 0;
+        }
+        #currentTasksList li {
+            background-color: #fff;
+            border: 1px solid #e0e0e6;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #currentTasksList li .task-info {
+            flex-grow: 1;
+        }
+        #currentTasksList li .task-title {
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-right: 10px;
+        }
+        #currentTasksList li .task-details {
+            font-size: 0.85em;
+            color: #555;
+        }
+        #currentTasksList li .task-status-badge {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        .status-todo { background-color: #fd7e14; color: white; }
+        .status-inprogress { background-color: #17a2b8; color: white; }
+
+        .top-navigation-bar {
+            width: 100%;
+            background-color: rgba(248, 248, 250, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 8px 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(220,220,225,0.7);
+        }
+        .top-navigation-bar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .top-navigation-bar li a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #1d1d1f;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-size: 0.9em;
+        }
+        .top-navigation-bar li a:hover,
+        .top-navigation-bar li a.active-nav-item {
+            background-color: #007aff;
+            color: white;
+        }
+        .top-navigation-bar li a .nav-icon {
+            margin-right: 6px;
+            font-size: 1.1em;
+            line-height: 1;
+        }
+
+        .crm-page-section {
+            display: none; 
+            width: 100%; 
+        }
+        .crm-page-section.active-page {
+            display: block; 
+        }
+        .page-content-wrapper {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.7); 
+            padding: 20px;
+            border-radius: 12px;
+            box-sizing: border-box; 
+            min-height: 400px; 
+        }
+        /* Removed #addLeadFormPageContainer styles as the container is removed */
+    </style>
+</head>
+<body>
+    <div id="loadingIndicator">Loading...</div>
+
+    <div class="crm-container">
+        <div id="authSection" class="auth-section">
+            <div class="auth-header">
+                <img id="authLogo" src="https://via.placeholder.com/60x60.png?text=Logo" alt="Dwellverse Logo"> <!-- REPLACE THIS URL -->
+                <h1>Dwellverse CRM Login</h1>
+            </div>
+            <div class="form-group"><label for="email">Email:</label><input type="email" id="email" required></div>
+            <div class="form-group"><label for="password">Password:</label><input type="password" id="password" required></div>
+            <button id="loginButton">Login</button>
+            <p id="authError" style="color: red; margin-top: 15px;"></p>
+        </div>
+
+        <div id="appSection" class="app-section" style="display:none;">
+            <div class="app-header">
+                <div id="userProfileCircle"></div>
+                <div class="app-header-banner-container">
+                    <img id="headerBannerLogo" src="https://via.placeholder.com/200x40.png?text=Dwellverse+Banner" alt="Dwellverse Banner">
+                </div>
+                <button id="logoutButton" class="danger">Logout</button>
+            </div>
+
+            <nav class="top-navigation-bar">
+                <ul>
+                    <li><a href="#" data-page="dashboard" class="nav-link active-nav-item"><span class="nav-icon">📊</span> Dashboard</a></li>
+                    <li><a href="#" data-page="leads" class="nav-link"><span class="nav-icon">👥</span> Leads</a></li>
+                    <li><a href="#" data-page="tasks" class="nav-link"><span class="nav-icon">📋</span> Tasks</a></li>
+                    <li><a href="#" data-page="kanban" class="nav-link"><span class="nav-icon">🗂️</span> Kanban</a></li>
+                    <li><a href="#" data-page="calendar" class="nav-link"><span class="nav-icon">📅</span> Calendar</a></li>
+                    <li><a href="#" data-page="email" class="nav-link"><span class="nav-icon">📧</span> Email</a></li>
+                    <li><a href="#" data-page="drip" class="nav-link"><span class="nav-icon">💧</span> Drip</a></li>
+                </ul>
+            </nav>
+
+            <!-- PAGE SECTIONS START -->
+            <div id="pageDashboard" class="crm-page-section active-page">
+                <h2>Dashboard</h2>
+                <div class="page-content-wrapper">
+                    <div class="dashboard-charts">
+                        <div class="chart-container">
+                            <h3>Lead Statuses</h3>
+                            <div class="chart-canvas-wrapper"><canvas id="leadStatusChart"></canvas></div>
+                            <div class="custom-legend-container" id="leadStatusCustomLegend"></div>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Task Statuses</h3>
+                            <div class="chart-canvas-wrapper"><canvas id="taskStatusChart"></canvas></div>
+                            <div class="custom-legend-container" id="taskStatusCustomLegend"></div>
+                        </div>
+                    </div>
+                    <div class="quick-add-forms-container">
+                        <div class="quick-add-form-wrapper">
+                            <div class="quick-add-form-content">
+                                <h3>Quick Add Lead</h3>
+                                <div class="form-group"><label for="quickLeadName">Lead Name:</label><input type="text" id="quickLeadName" placeholder="e.g., Jane Smith"></div>
+                                <div class="form-group"><label for="quickLeadEmail">Email:</label><input type="email" id="quickLeadEmail" placeholder="e.g., jane@example.com"></div>
+                                <div class="form-group"><label for="quickLeadPhone">Phone Number:</label><input type="tel" id="quickLeadPhone" placeholder="e.g., (555) 123-4567"></div>
+                                <div class="form-group">
+                                    <label for="quickLeadType">Lead Type:</label>
+                                    <select id="quickLeadType">
+                                        <option value="">Select Type...</option>
+                                        <option value="Buyer">Buyer</option><option value="Seller">Seller</option>
+                                        <option value="Investor">Investor</option><option value="Renter">Renter</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quickLeadStatus">Status:</label>
+                                    <select id="quickLeadStatus">
+                                        <option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option>
+                                        <option value="Proposal">Proposal Sent</option><option value="Negotiation">Negotiation</option>
+                                        <option value="Won">Closed - Won</option><option value="Lost">Closed - Lost</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quick-add-form-actions">
+                                <button id="quickAddLeadButton">Add Lead</button>
+                                <button id="openAddLeadModalButton">Detailed Add</button>
+                            </div>
+                        </div>
+                        <div class="quick-add-form-wrapper">
+                            <div class="quick-add-form-content">
+                                <h3>Quick Add Task</h3>
+                                <div class="form-group"><label for="quickTaskTitle">Task Title:</label><input type="text" id="quickTaskTitle" placeholder="e.g., Send intro email"></div>
+                                <div class="premade-task-buttons">
+                                    <button type="button" class="premade-task-btn">Follow Up Call</button>
+                                    <button type="button" class="premade-task-btn">Send Proposal</button>
+                                    <button type="button" class="premade-task-btn">Schedule Showing</button>
+                                    <button type="button" class="premade-task-btn">Client Meeting</button>
+                                    <button type="button" class="premade-task-btn">Market Research</button>
+                                    <button type="button" class="premade-task-btn">Prepare CMA</button>
+                                    <button type="button" class="premade-task-btn">Draft Offer</button>
+                                    <button type="button" class="premade-task-btn">Listing Agreement</button>
+                                    <button type="button" class="premade-task-btn">Order Photos</button>
+                                    <button type="button" class="premade-task-btn">Input MLS Listing</button>
+                                    <button type="button" class="premade-task-btn">Open House Prep</button>
+                                    <button type="button" class="premade-task-btn">Negotiate Terms</button>
+                                    <button type="button" class="premade-task-btn">Inspection Follow-up</button>
+                                    <button type="button" class="premade-task-btn">Closing Coordination</button>
+                                    <button type="button" class="premade-task-btn">Post-Closing Follow Up</button>
+                                </div>
+                                <div class="form-group"><label for="quickTaskDueDate">Due Date:</label><input type="date" id="quickTaskDueDate"></div>
+                                <div class="form-group">
+                                    <label for="quickTaskAssociatedLead">Associated Lead:</label>
+                                    <select id="quickTaskAssociatedLead"><option value="">None</option></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quickTaskStatus">Status:</label>
+                                    <select id="quickTaskStatus">
+                                        <option value="To Do">To Do</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quick-add-form-actions">
+                                 <button id="quickAddTaskButton">Add Task</button>
+                                 <button id="openAddTaskModalButton">Detailed Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageLeads" class="crm-page-section">
+                <h2>Lead Management</h2>
+                <div class="page-content-wrapper">
+                    <button id="showAddLeadFormButtonPage" style="margin-bottom: 15px;">Add New Lead</button>
+                    
+                    <!-- Inline form container removed -->
+
+                    <div class="lead-grid-controls-container"> 
+                        <div class="lead-grid-controls">
+                            <div class="filter-group">
+                                <label for="filterLeadStatus">Filter by Lead Status:</label>
+                                <select id="filterLeadStatus">
+                                    <option value="">All Statuses</option><option value="New">New</option><option value="Contacted">Contacted</option>
+                                    <option value="Qualified">Qualified</option><option value="Proposal">Proposal Sent</option>
+                                    <option value="Negotiation">Negotiation</option><option value="Won">Won</option><option value="Lost">Lost</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filterLeadByTaskStatus">Filter by Task Status of Lead:</label>
+                                <select id="filterLeadByTaskStatus">
+                                    <option value="">Any Task Status</option><option value="To Do">Has 'To Do' Tasks</option>
+                                    <option value="In Progress">Has 'In Progress' Tasks</option><option value="Completed">Has 'Completed' Tasks</option>
+                                    <option value="HAS_NO_TASKS">Has No Tasks</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="leadsGridContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageTasks" class="crm-page-section">
+                <h2>Tasks</h2>
+                <div class="page-content-wrapper">
+                    <div id="currentTasksListContainer">
+                        <ul id="currentTasksList">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageKanban" class="crm-page-section">
+                <h2>Kanban View (Leads)</h2>
+                <div class="page-content-wrapper">
+                    <div id="leadKanbanBoard" class="kanban-board"></div>
+                </div>
+            </div>
+
+            <div id="pageCalendar" class="crm-page-section">
+                <h2>Task Calendar</h2>
+                <div class="page-content-wrapper">
+                    <div id="calendarSection">
+                        <div class="calendar-controls">
+                            <label for="calendarTaskStatusFilter">Filter Tasks by Status:</label>
+                            <select id="calendarTaskStatusFilter">
+                                <option value="">All Tasks</option><option value="To Do">To Do</option>
+                                <option value="In Progress">In Progress</option><option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div id="taskCalendar"></div>
+                        <div class="calendar-export-button-container">
+                            <button id="exportICalButton">Export Calendar (iCal)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pageEmail" class="crm-page-section">
+                <h2>Email Integration</h2>
+                <div class="page-content-wrapper">
+                    <p>Email page content will go here. (Placeholder)</p>
+                </div>
+            </div>
+
+            <div id="pageDrip" class="crm-page-section">
+                <h2>Drip Campaigns</h2>
+                <div class="page-content-wrapper">
+                    <p>Drip campaigns content will go here. (Placeholder)</p>
+                </div>
+            </div>
+            <!-- PAGE SECTIONS END -->
+
+        </div>
+    </div>
+
+    <!-- Lead Modal (Used for dashboard Detailed Add, Leads page Add New Lead, and editing from grid) -->
+    <div id="leadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeLeadModalButton">×</span>
+            <h2 id="leadModalTitle">Add New Lead</h2>
+            <form id="leadForm">
+                <input type="hidden" id="leadId">
+                <div class="form-group"><label for="leadNameModal">Name:</label><input type="text" id="leadNameModal" required></div>
+                <div class="modal-form-row">
+                    <div class="form-group"><label for="leadEmailModal">Email:</label><input type="email" id="leadEmailModal"></div>
+                    <div class="form-group"><label for="leadPhoneModal">Phone:</label><input type="tel" id="leadPhoneModal"></div>
+                </div>
+                <div class="modal-form-row">
+                    <div class="form-group">
+                        <label for="leadTypeModal">Lead Type:</label>
+                        <select id="leadTypeModal"><option value="">Select Type...</option><option value="Buyer">Buyer</option><option value="Seller">Seller</option><option value="Investor">Investor</option><option value="Renter">Renter</option><option value="Other">Other</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="leadSourceModal">Source:</label>
+                        <select id="leadSourceModal"><option value="">Select Source...</option><option value="Website">Website</option><option value="Referral">Referral</option><option value="Social Media">Social Media</option><option value="Online Ad">Online Ad</option><option value="Open House">Open House</option><option value="Networking">Networking</option><option value="Cold Call">Cold Call</option><option value="Other">Other</option></select>
+                    </div>
+                </div>
+                <div class="modal-form-row">
+                    <div class="form-group">
+                        <label for="leadStatusModal">Status:</label>
+                        <select id="leadStatusModal"><option value="New">New</option><option value="Contacted">Contacted</option><option value="Qualified">Qualified</option><option value="Proposal">Proposal</option><option value="Negotiation">Negotiation</option><option value="Won">Won</option><option value="Lost">Lost</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender:</label>
+                        <div class="form-group-radio">
+                            <input type="radio" id="genderMaleModal" name="genderModal" value="Male"><label for="genderMaleModal">Male</label>
+                            <input type="radio" id="genderFemaleModal" name="genderModal" value="Female"><label for="genderFemaleModal">Female</label>
+                            <input type="radio" id="genderOtherModal" name="genderModal" value="Other/Prefer not to say" checked><label for="genderOtherModal">Other</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-form-row">
+                    <div class="form-group"><label for="leadInstagramModal">Instagram URL:</label><input type="url" id="leadInstagramModal" placeholder="https://instagram.com/username"></div>
+                    <div class="form-group"><label for="leadFacebookModal">Facebook URL:</label><input type="url" id="leadFacebookModal" placeholder="https://facebook.com/profile"></div>
+                </div>
+                <div class="form-group"><label for="leadTags">Tags (comma-separated):</label><input type="text" id="leadTags" placeholder="e.g., buyer, investor"></div>
+                <div class="form-group"><label for="leadNotes">Notes:</label><textarea id="leadNotes"></textarea></div>
+                <button type="button" id="saveLeadButton">Save Lead</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal"><div class="modal-content"><span class="close-button" id="closeTaskModalButton">×</span><h2 id="taskModalTitle">Add Task</h2><form id="taskForm"><input type="hidden" id="taskId"><div class="form-group"><label for="taskTitleModal">Title:</label><input type="text" id="taskTitleModal" required></div><div class="form-group"><label for="taskDescription">Description:</label><textarea id="taskDescription"></textarea></div><div class="form-group"><label for="taskDueDateModal">Due Date:</label><input type="date" id="taskDueDateModal"></div><div class="form-group"><label for="taskStatusModal">Status:</label><select id="taskStatusModal"><option value="To Do">To Do</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div><div class="form-group"><label for="taskAssociatedLeadModal">Associated Lead:</label><select id="taskAssociatedLeadModal"><option value="">None</option></select></div><button type="button" id="saveTaskButton">Save Task</button></form></div></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, doc, setDoc, deleteDoc, onSnapshot, Timestamp, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+        Chart.register(ChartDataLabels);
+
+        const firebaseConfig = { /* YOUR FIREBASE CONFIG */
+            apiKey: "AIzaSyCtSvypYxUavS787oXsj7nSuN3SoiX7ibI", // Replace with your actual config
+            authDomain: "dwellversecrm-e3181.firebaseapp.com",
+            projectId: "dwellversecrm-e3181",
+            storageBucket: "dwellversecrm-e3181.firebasestorage.app",
+            messagingSenderId: "270771004645",
+            appId: "1:270771004645:web:ff4af0da3f6bb69529200c",
+            measurementId: "G-W1G5B4PX96"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let leadStatusChartInstance = null;
+        let taskStatusChartInstance = null;
+        let allLeads = [];
+        let allTasks = [];
+        const leadStatusesForKanban = ["New", "Contacted", "Qualified", "Proposal", "Negotiation", "Won", "Lost"];
+        let calendarInstance = null;
+
+        // DOM Elements
+        const authSection = document.getElementById('authSection');
+        const appSection = document.getElementById('appSection');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
+        const logoutButton = document.getElementById('logoutButton');
+        const authError = document.getElementById('authError');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const userProfileCircle = document.getElementById('userProfileCircle');
+
+        const quickLeadNameInput = document.getElementById('quickLeadName');
+        const quickLeadEmailInput = document.getElementById('quickLeadEmail');
+        const quickLeadPhoneInput = document.getElementById('quickLeadPhone');
+        const quickLeadTypeInput = document.getElementById('quickLeadType');
+        const quickLeadStatusInput = document.getElementById('quickLeadStatus');
+        const quickAddLeadButton = document.getElementById('quickAddLeadButton');
+        const openAddLeadModalButton = document.getElementById('openAddLeadModalButton');
+
+        const quickTaskTitleInput = document.getElementById('quickTaskTitle');
+        const quickTaskDueDateInput = document.getElementById('quickTaskDueDate');
+        const quickTaskAssociatedLeadInput = document.getElementById('quickTaskAssociatedLead');
+        const quickTaskStatusInput = document.getElementById('quickTaskStatus');
+        const quickAddTaskButton = document.getElementById('quickAddTaskButton');
+        const openAddTaskModalButton = document.getElementById('openAddTaskModalButton');
+        const premadeTaskButtons = document.querySelectorAll('.premade-task-btn');
+
+        const leadsGridContainer = document.getElementById('leadsGridContainer');
+        // const leadGridControlsContainer = document.querySelector('#pageLeads .lead-grid-controls-container'); // No longer needed for separate form
+        const leadKanbanBoardDiv = document.getElementById('leadKanbanBoard');
+        const filterLeadStatus = document.getElementById('filterLeadStatus');
+        const filterLeadByTaskStatus = document.getElementById('filterLeadByTaskStatus');
+
+        // Button on Leads Page to open the modal
+        const showAddLeadFormButtonPage = document.getElementById('showAddLeadFormButtonPage');
+        
+        // Original Lead Modal Elements (still used)
+        const leadModal = document.getElementById('leadModal');
+        const leadForm = document.getElementById('leadForm'); 
+        const closeLeadModalButton = document.getElementById('closeLeadModalButton');
+        const leadModalTitle = document.getElementById('leadModalTitle');
+        const leadIdInput = document.getElementById('leadId');
+        const leadNameModalInput = document.getElementById('leadNameModal');
+        const leadEmailModalInput = document.getElementById('leadEmailModal');
+        const leadPhoneModalInput = document.getElementById('leadPhoneModal');
+        const leadTypeModalInput = document.getElementById('leadTypeModal');
+        const leadSourceModalInput = document.getElementById('leadSourceModal');
+        const leadInstagramModalInput = document.getElementById('leadInstagramModal');
+        const leadFacebookModalInput = document.getElementById('leadFacebookModal');
+        const leadStatusModalInput = document.getElementById('leadStatusModal');
+        const leadTagsInput = document.getElementById('leadTags');
+        const leadNotesInput = document.getElementById('leadNotes');
+        const saveLeadButton = document.getElementById('saveLeadButton'); 
+
+        const taskModal = document.getElementById('taskModal');
+        const taskForm = document.getElementById('taskForm');
+        const closeTaskModalButton = document.getElementById('closeTaskModalButton');
+        const taskModalTitle = document.getElementById('taskModalTitle');
+        const taskIdInput = document.getElementById('taskId');
+        const taskTitleModalInput = document.getElementById('taskTitleModal');
+        const taskDescriptionInput = document.getElementById('taskDescription');
+        const taskDueDateModalInput = document.getElementById('taskDueDateModal');
+        const taskStatusModalInput = document.getElementById('taskStatusModal');
+        const taskAssociatedLeadModalInput = document.getElementById('taskAssociatedLeadModal');
+        const saveTaskButton = document.getElementById('saveTaskButton');
+
+        const taskCalendarEl = document.getElementById('taskCalendar');
+        const calendarTaskStatusFilter = document.getElementById('calendarTaskStatusFilter');
+        const exportICalButton = document.getElementById('exportICalButton');
+
+        const leadStatusCustomLegendEl = document.getElementById('leadStatusCustomLegend');
+        const taskStatusCustomLegendEl = document.getElementById('taskStatusCustomLegend');
+        const currentTasksListEl = document.getElementById('currentTasksList'); 
+
+        const navLinks = document.querySelectorAll('.top-navigation-bar .nav-link');
+        const pageSections = document.querySelectorAll('.crm-page-section');
+
+
+        function showLoading(show) { loadingIndicator.style.display = show ? 'flex' : 'none'; }
+
+        function getInitials(email) {
+            if (!email) return '';
+            const namePart = email.split('@')[0];
+            const parts = namePart.split(/[.\-_ ]+/);
+            let initials = '';
+            if (parts.length > 0 && parts[0]) { initials += parts[0][0]; }
+            if (parts.length > 1 && parts[1]) { initials += parts[1][0]; }
+            if (initials.length === 0 && namePart.length > 0) { initials = namePart[0];}
+            return initials.toUpperCase();
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            showLoading(true);
+            if (user) {
+                currentUser = user;
+                authSection.style.display = 'none'; appSection.style.display = 'block';
+                if (userProfileCircle) {
+                    userProfileCircle.textContent = getInitials(user.email);
+                    userProfileCircle.title = user.email;
+                }
+                authError.textContent = '';
+                loadInitialData();
+            } else {
+                currentUser = null;
+                authSection.style.display = 'block'; appSection.style.display = 'none';
+                if (userProfileCircle) {
+                    userProfileCircle.textContent = '';
+                    userProfileCircle.title = '';
+                }
+                clearAppData();
+            }
+            showLoading(false);
+        });
+        loginButton.addEventListener('click', () => {
+             const emailVal = emailInput.value; const passwordVal = passwordInput.value;
+            if (!emailVal || !passwordVal) { authError.textContent = "Please enter email and password."; return; }
+            authError.textContent = ""; showLoading(true);
+            signInWithEmailAndPassword(auth, emailVal, passwordVal)
+                .catch(error => { console.error("Login error:", error.code, error.message); authError.textContent = "Login failed: " + error.message; })
+                .finally(() => showLoading(false));
+        });
+        logoutButton.addEventListener('click', () => {
+             showLoading(true);
+            signOut(auth).catch(error => { console.error("Logout error:", error); authError.textContent = error.message; })
+            .finally(() => showLoading(false));
+        });
+
+        function clearAppData() {
+            leadsGridContainer.innerHTML = ''; leadKanbanBoardDiv.innerHTML = '';
+            if (currentTasksListEl) currentTasksListEl.innerHTML = ''; 
+            allLeads = []; allTasks = [];
+            if (leadUnsubscribe) { leadUnsubscribe(); leadUnsubscribe = null;}
+            if (taskUnsubscribe) { taskUnsubscribe(); taskUnsubscribe = null;}
+            if (leadStatusChartInstance) { leadStatusChartInstance.destroy(); leadStatusChartInstance = null;}
+            if (taskStatusChartInstance) { taskStatusChartInstance.destroy(); taskStatusChartInstance = null;}
+            if (calendarInstance) {calendarInstance.destroy(); calendarInstance = null;}
+            if (leadStatusCustomLegendEl) leadStatusCustomLegendEl.innerHTML = '';
+            if (taskStatusCustomLegendEl) taskStatusCustomLegendEl.innerHTML = '';
+            
+            pageSections.forEach(section => section.classList.remove('active-page'));
+            const dashboardPage = document.getElementById('pageDashboard');
+            if(dashboardPage) dashboardPage.classList.add('active-page');
+            navLinks.forEach(link => link.classList.remove('active-nav-item'));
+            const dashboardLink = document.querySelector('.nav-link[data-page="dashboard"]');
+            if(dashboardLink) dashboardLink.classList.add('active-nav-item');
+        }
+        function loadInitialData() {
+            if (!currentUser) return;
+            showLoading(true);
+            updateLeadStatusChart(); updateTaskStatusChart();
+            initializeCalendar(); 
+            setupLeadListener(); setupTaskListener(); 
+            showLoading(false);
+        }
+
+        let leadUnsubscribe = null; let taskUnsubscribe = null;
+        function setupLeadListener() {
+            if (!currentUser) return; if (leadUnsubscribe) leadUnsubscribe();
+            const q = query(collection(db, `users/${currentUser.uid}/leads`), orderBy("createdAt", "desc"));
+            leadUnsubscribe = onSnapshot(q, (snapshot) => {
+                allLeads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                applyLeadFiltersAndRender(); updateLeadStatusChart(); populateLeadDropdowns();
+                renderCurrentTasksList(); 
+            }, error => { console.error("Error in lead listener: ", error); leadsGridContainer.innerHTML = '<p>Error loading leads.</p>'; });
+        }
+        function setupTaskListener() {
+            if (!currentUser) return; if (taskUnsubscribe) taskUnsubscribe();
+            const q = query(collection(db, `users/${currentUser.uid}/tasks`), orderBy("createdAt", "desc"));
+            taskUnsubscribe = onSnapshot(q, (snapshot) => {
+                allTasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                applyLeadFiltersAndRender(); updateTaskStatusChart(); renderCalendarEvents();
+                renderCurrentTasksList(); 
+            }, error => { console.error("Error in task listener: ", error);});
+        }
+
+        function renderCurrentTasksList() {
+            if (!currentTasksListEl) return;
+            currentTasksListEl.innerHTML = '';
+
+            const activeTasks = allTasks.filter(task => task.status === "To Do" || task.status === "In Progress")
+                                        .sort((a,b) => { 
+                                            if (a.dueDate && b.dueDate) return a.dueDate.toDate() - b.dueDate.toDate();
+                                            if (a.dueDate) return -1; 
+                                            if (b.dueDate) return 1;
+                                            return (b.createdAt?.toDate() || 0) - (a.createdAt?.toDate() || 0); 
+                                        });
+
+
+            if (activeTasks.length === 0) {
+                currentTasksListEl.innerHTML = '<li>No current tasks.</li>';
+                return;
+            }
+
+            activeTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.dataset.taskId = task.id;
+
+                const taskInfoDiv = document.createElement('div');
+                taskInfoDiv.className = 'task-info';
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'task-title';
+                titleSpan.textContent = task.title || 'Untitled Task';
+                taskInfoDiv.appendChild(titleSpan);
+
+                const detailsSpan = document.createElement('span');
+                detailsSpan.className = 'task-details';
+                let detailsText = '';
+                if (task.dueDate && typeof task.dueDate.toDate === 'function') {
+                    detailsText += `Due: ${task.dueDate.toDate().toLocaleDateString()} | `;
+                }
+                const associatedLead = allLeads.find(lead => lead.id === task.associatedLeadId);
+                if (associatedLead) {
+                    detailsText += `Lead: ${associatedLead.name || 'N/A'}`;
+                } else if (task.associatedLeadId) {
+                    detailsText += `Lead: ID ${task.associatedLeadId.substring(0,5)}...`;
+                } else {
+                    detailsText += 'No Associated Lead';
+                }
+                detailsSpan.textContent = detailsText.trim().endsWith('|') ? detailsText.trim().slice(0,-1).trim() : detailsText.trim();
+                taskInfoDiv.appendChild(detailsSpan);
+
+                const statusBadge = document.createElement('span');
+                statusBadge.className = 'task-status-badge';
+                statusBadge.textContent = task.status;
+                if (task.status === "To Do") statusBadge.classList.add('status-todo');
+                else if (task.status === "In Progress") statusBadge.classList.add('status-inprogress');
+
+                li.appendChild(taskInfoDiv);
+                li.appendChild(statusBadge);
+                li.addEventListener('click', () => openTaskModal(task)); 
+                currentTasksListEl.appendChild(li);
+            });
+        }
+
+
+        function populateLeadDropdowns() {
+            const selectsToPopulate = [
+                { id: 'quickTaskAssociatedLead', element: quickTaskAssociatedLeadInput },
+                { id: 'taskAssociatedLeadModal', element: taskAssociatedLeadModalInput }
+            ];
+            selectsToPopulate.forEach(selectObj => {
+                const selectElement = selectObj.element; if (!selectElement) return;
+                const currentVal = selectElement.value;
+                selectElement.innerHTML = '<option value="">None</option>';
+                if (allLeads && allLeads.length > 0) {
+                    allLeads.forEach(lead => {
+                        if (lead && lead.id && lead.name) {
+                            const option = document.createElement('option');
+                            option.value = lead.id; option.textContent = lead.name;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                    if (allLeads.some(l => l && l.id === currentVal)) { selectElement.value = currentVal; }
+                }
+            });
+        }
+
+        quickAddLeadButton.addEventListener('click', async () => {
+            if (!currentUser) return;
+            const name = quickLeadNameInput.value.trim();
+            const email = quickLeadEmailInput.value.trim();
+            const phone = quickLeadPhoneInput.value.trim();
+            const type = quickLeadTypeInput.value;
+            const status = quickLeadStatusInput.value;
+            if (!name) { alert("Lead name is required."); return; }
+            showLoading(true);
+            try {
+                await addDoc(collection(db, `users/${currentUser.uid}/leads`), {
+                    name, email, phone, type, status,
+                    source: "", instagram: "", facebook: "", gender: "Other/Prefer not to say",
+                    tags: [], notes: "",
+                    createdAt: Timestamp.now(), updatedAt: Timestamp.now()
+                });
+                quickLeadNameInput.value = ''; quickLeadEmailInput.value = '';
+                quickLeadPhoneInput.value = ''; quickLeadTypeInput.value = '';
+                quickLeadStatusInput.value = 'New';
+            } catch (e) { console.error("Error quick adding lead: ", e); alert("Failed to add lead."); }
+            finally { showLoading(false); }
+        });
+        premadeTaskButtons.forEach(button => {
+            button.addEventListener('click', () => { quickTaskTitleInput.value = button.textContent; });
+        });
+        quickAddTaskButton.addEventListener('click', async () => {
+            if (!currentUser) return;
+            const title = quickTaskTitleInput.value.trim();
+            const dueDate = quickTaskDueDateInput.value;
+            const status = quickTaskStatusInput.value;
+            const leadId = quickTaskAssociatedLeadInput.value;
+            if (!title) { alert("Task title is required."); return; }
+            showLoading(true);
+            try {
+                await addDoc(collection(db, `users/${currentUser.uid}/tasks`), {
+                    title, status,
+                    dueDate: dueDate ? Timestamp.fromDate(new Date(dueDate)) : null,
+                    associatedLeadId: leadId || null,
+                    description: "", createdAt: Timestamp.now(), updatedAt: Timestamp.now()
+                });
+                quickTaskTitleInput.value = ''; quickTaskDueDateInput.value = '';
+                quickTaskAssociatedLeadInput.value = ''; quickTaskStatusInput.value = 'To Do';
+            } catch (e) { console.error("Error quick adding task: ", e); alert("Failed to add task."); }
+            finally { showLoading(false); }
+        });
+
+        // Modal open/close
+        openAddLeadModalButton.addEventListener('click', () => openLeadModal()); // Dashboard Detailed Add
+        closeLeadModalButton.addEventListener('click', () => leadModal.style.display = "none");
+        openAddTaskModalButton.addEventListener('click', () => openTaskModal());
+        closeTaskModalButton.addEventListener('click', () => taskModal.style.display = "none");
+
+        // Leads Page "Add New Lead" button
+        if(showAddLeadFormButtonPage) {
+            showAddLeadFormButtonPage.addEventListener('click', () => {
+                openLeadModal(); // Opens the existing modal in "add new" mode
+            });
+        }
+
+        filterLeadStatus.addEventListener('change', applyLeadFiltersAndRender);
+        filterLeadByTaskStatus.addEventListener('change', applyLeadFiltersAndRender);
+        function applyLeadFiltersAndRender() {
+            let filtered = [...allLeads];
+            const selectedLeadStatus = filterLeadStatus.value;
+            const selectedTaskStatusFilter = filterLeadByTaskStatus.value;
+            if (selectedLeadStatus) {
+                filtered = filtered.filter(lead => lead && lead.status === selectedLeadStatus);
+            }
+            if (selectedTaskStatusFilter && Array.isArray(allTasks)) {
+                if (selectedTaskStatusFilter === "HAS_NO_TASKS") {
+                    filtered = filtered.filter(lead => lead && !allTasks.some(task => task && task.associatedLeadId === lead.id));
+                } else {
+                    filtered = filtered.filter(lead =>
+                        lead && allTasks.some(task => task && task.associatedLeadId === lead.id && task.status === selectedTaskStatusFilter)
+                    );
+                }
+            }
+            renderLeadGrid(filtered);
+            renderKanbanBoard(filtered);
+        }
+        
+        function openLeadModal(leadToEdit = null) {
+            leadForm.reset(); 
+            leadModal.style.display = "block";
+            if (leadToEdit) {
+                leadModalTitle.textContent = "Edit Lead";
+                leadIdInput.value = leadToEdit.id;
+                leadNameModalInput.value = leadToEdit.name || '';
+                leadEmailModalInput.value = leadToEdit.email || '';
+                leadPhoneModalInput.value = leadToEdit.phone || '';
+                leadTypeModalInput.value = leadToEdit.type || '';
+                leadSourceModalInput.value = leadToEdit.source || '';
+                leadInstagramModalInput.value = leadToEdit.instagram || '';
+                leadFacebookModalInput.value = leadToEdit.facebook || '';
+                const gender = leadToEdit.gender || 'Other/Prefer not to say';
+                const genderRadio = document.querySelector(`input[name="genderModal"][value="${gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+                else document.getElementById('genderOtherModal').checked = true;
+                leadStatusModalInput.value = leadToEdit.status || 'New';
+                leadTagsInput.value = Array.isArray(leadToEdit.tags) ? leadToEdit.tags.join(', ') : '';
+                leadNotesInput.value = leadToEdit.notes || '';
+            } else {
+                leadModalTitle.textContent = "Add New Lead";
+                leadIdInput.value = '';
+                leadStatusModalInput.value = 'New';
+                document.getElementById('genderOtherModal').checked = true;
+            }
+        }
+        
+        saveLeadButton.addEventListener('click', async () => { // This is for the modal
+            if (!currentUser) return;
+            const id = leadIdInput.value;
+            const selectedGenderRadio = document.querySelector('input[name="genderModal"]:checked');
+            const leadData = {
+                name: leadNameModalInput.value.trim(), email: leadEmailModalInput.value.trim(),
+                phone: leadPhoneModalInput.value.trim(), type: leadTypeModalInput.value,
+                source: leadSourceModalInput.value, instagram: leadInstagramModalInput.value.trim(),
+                facebook: leadFacebookModalInput.value.trim(),
+                gender: selectedGenderRadio ? selectedGenderRadio.value : 'Other/Prefer not to say',
+                status: leadStatusModalInput.value,
+                tags: leadTagsInput.value.split(',').map(t => t.trim()).filter(t => t),
+                notes: leadNotesInput.value.trim(), updatedAt: Timestamp.now()
+            };
+            if (!leadData.name) { alert("Lead name is required."); return; }
+            showLoading(true);
+            try {
+                if (id) { // Editing existing lead
+                    await setDoc(doc(db, `users/${currentUser.uid}/leads`, id), leadData, { merge: true }); 
+                } else { // Adding new lead
+                    leadData.createdAt = Timestamp.now(); 
+                    await addDoc(collection(db, `users/${currentUser.uid}/leads`), leadData); 
+                }
+                leadModal.style.display = "none";
+            } catch (e) { console.error("Error saving lead from modal: ", e); alert("Failed to save lead."); }
+            finally { showLoading(false); }
+        });
+        async function deleteLead(leadId) {
+            if (!currentUser || !confirm("Delete lead? Associated tasks will also be deleted.")) return;
+            showLoading(true);
+            try {
+                const tasksQuery = query(collection(db, `users/${currentUser.uid}/tasks`), where("associatedLeadId", "==", leadId));
+                const taskSnap = await getDocs(tasksQuery);
+                await Promise.all(taskSnap.docs.map(d => deleteDoc(d.ref)));
+                await deleteDoc(doc(db, `users/${currentUser.uid}/leads`, leadId));
+            } catch (e) { console.error("Error deleting lead: ", e); alert("Failed to delete lead."); }
+            finally { showLoading(false); }
+        }
+        function renderLeadGrid(leads) {
+            leadsGridContainer.innerHTML = '';
+            const messageIfEmpty = filterLeadStatus.value || filterLeadByTaskStatus.value ?
+                                  '<p>No leads match your current filters.</p>' :
+                                  '<p>No leads yet. Add one using the button above!</p>';
+            if (!leads || leads.length === 0) { leadsGridContainer.innerHTML = messageIfEmpty; return; }
+            leads.forEach(lead => {
+                if (!lead || typeof lead !== 'object') { return; }
+                const card = document.createElement('div'); card.className = 'lead-card';
+                const name = lead.name || 'N/A'; const status = lead.status || 'N/A';
+                const leadType = lead.type || 'N/A'; const phone = lead.phone || '';
+                const email = lead.email || '';
+                const tags = (lead.tags && Array.isArray(lead.tags)) ? lead.tags.join(', ') : '';
+                let notes = lead.notes || ''; if (notes.length > 50) notes = notes.substring(0,50) + '...';
+                card.innerHTML = `<h4>${name} <small style="font-weight:normal; font-size:0.7em; color: #555;">(${leadType})</small></h4><p><strong>Status:</strong> ${status}</p>${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}${tags ? `<p><strong>Tags:</strong> ${tags}</p>` : ''}${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ''}<div class="actions"><button class="edit-lead">Edit</button><button class="delete-lead danger">Delete</button></div>`;
+                card.querySelector('.edit-lead').addEventListener('click', () => openLeadModal(lead));
+                card.querySelector('.delete-lead').addEventListener('click', () => deleteLead(lead.id));
+                leadsGridContainer.appendChild(card);
+            });
+        }
+        function renderKanbanBoard(leads) {
+             leadKanbanBoardDiv.innerHTML = '';
+            leadStatusesForKanban.forEach(status => {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'kanban-column'; colDiv.dataset.status = status;
+                colDiv.innerHTML = `<h3>${status}</h3><div class="cards-container"></div>`;
+                const cardsCont = colDiv.querySelector('.cards-container');
+                if (leads && leads.length > 0) {
+                    leads.filter(l => l && l.status === status).forEach(lead => {
+                        const cardDiv = document.createElement('div');
+                        cardDiv.className = 'kanban-card'; cardDiv.dataset.leadId = lead.id; cardDiv.draggable = true;
+                        const leadName = lead.name || 'N/A'; const leadType = lead.type || '';
+                        const leadPhone = lead.phone || ''; const leadEmail = lead.email || '';
+                        cardDiv.innerHTML = `<h5>${leadName} ${leadType ? '<small>('+leadType+')</small>' : ''}</h5>${leadPhone ? `<p><small>P: ${leadPhone}</small></p>` : ''}${leadEmail ? `<p><small>E: ${leadEmail}</small></p>` : ''}`;
+                        cardDiv.addEventListener('dragstart', handleDragStart);
+                        cardDiv.addEventListener('click', () => openLeadModal(lead)); 
+                        cardsCont.appendChild(cardDiv);
+                    });
+                }
+                colDiv.addEventListener('dragover', handleDragOver); colDiv.addEventListener('drop', handleDrop);
+                leadKanbanBoardDiv.appendChild(colDiv);
+            });
+        }
+        let draggedItem = null;
+        function handleDragStart(e) {
+             draggedItem = e.target; e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', e.target.dataset.leadId);
+            setTimeout(() => e.target.classList.add('dragging'), 0);
+        }
+        function handleDragOver(e) {  e.preventDefault(); e.dataTransfer.dropEffect = 'move';}
+        async function handleDrop(e) {
+            e.preventDefault();
+            if (!draggedItem) return;
+            draggedItem.classList.remove('dragging');
+            let targetCol = e.target;
+            while(targetCol && !targetCol.classList.contains('kanban-column')) { targetCol = targetCol.parentElement; }
+            if (targetCol && targetCol.classList.contains('kanban-column')) {
+                const newStatus = targetCol.dataset.status; const leadId = draggedItem.dataset.leadId;
+                const cardsContInTarget = targetCol.querySelector('.cards-container');
+                if (cardsContInTarget) { cardsContInTarget.appendChild(draggedItem); } else { targetCol.appendChild(draggedItem); }
+                showLoading(true);
+                try {
+                    await setDoc(doc(db, `users/${currentUser.uid}/leads`, leadId), { status: newStatus, updatedAt: Timestamp.now() }, { merge: true });
+                } catch (err) { console.error("Error updating lead status:", err); alert("Failed to update status."); applyLeadFiltersAndRender(); }
+                finally { showLoading(false); }
+            }
+            draggedItem = null;
+        }
+
+        function openTaskModal(taskToEdit = null) {
+            taskForm.reset(); taskModal.style.display = "block"; populateLeadDropdowns();
+            if (taskToEdit) {
+                taskModalTitle.textContent = "Edit Task"; taskIdInput.value = taskToEdit.id;
+                taskTitleModalInput.value = taskToEdit.title || '';
+                taskDescriptionInput.value = taskToEdit.description || '';
+                taskDueDateModalInput.value = taskToEdit.dueDate ? new Date(taskToEdit.dueDate.toDate()).toISOString().split('T')[0] : '';
+                taskStatusModalInput.value = taskToEdit.status || 'To Do';
+                taskAssociatedLeadModalInput.value = taskToEdit.associatedLeadId || '';
+            } else {
+                taskModalTitle.textContent = "Add New Task"; taskIdInput.value = ''; taskStatusModalInput.value = 'To Do';
+            }
+        }
+        saveTaskButton.addEventListener('click', async () => {
+            if (!currentUser) return;
+            const id = taskIdInput.value;
+            const taskData = {
+                title: taskTitleModalInput.value.trim(), description: taskDescriptionInput.value.trim(),
+                dueDate: taskDueDateModalInput.value ? Timestamp.fromDate(new Date(taskDueDateModalInput.value)) : null,
+                status: taskStatusModalInput.value, associatedLeadId: taskAssociatedLeadModalInput.value || null,
+                updatedAt: Timestamp.now()
+            };
+            if (!taskData.title) { alert("Task title is required."); return; }
+            showLoading(true);
+            try {
+                if (id) { await setDoc(doc(db, `users/${currentUser.uid}/tasks`, id), taskData, { merge: true }); }
+                else { taskData.createdAt = Timestamp.now(); await addDoc(collection(db, `users/${currentUser.uid}/tasks`), taskData); }
+                taskModal.style.display = "none";
+            } catch (e) { console.error("Error saving task: ", e); alert("Failed to save task."); }
+            finally { showLoading(false); }
+        });
+        async function deleteTask(taskId) {
+            if (!currentUser || !confirm("Delete this task?")) return;
+            showLoading(true);
+            try { await deleteDoc(doc(db, `users/${currentUser.uid}/tasks`, taskId)); }
+            catch (e) { console.error("Error deleting task: ", e); alert("Failed to delete task."); }
+            finally { showLoading(false); }
+        }
+
+        function initializeCalendar() {
+            if (calendarInstance) { calendarInstance.destroy(); calendarInstance = null; }
+            if (!taskCalendarEl) { console.error("Task calendar element not found!"); return; }
+            calendarInstance = new FullCalendar.Calendar(taskCalendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' },
+                events: [], editable: true, selectable: false,
+                eventDrop: async function(info) {
+                    const taskId = info.event.id; const newDueDate = info.event.start;
+                    if (!taskId || !newDueDate) { console.error("Task ID or new due date is missing."); info.revert(); return; }
+                    showLoading(true);
+                    try {
+                        const taskRef = doc(db, `users/${currentUser.uid}/tasks`, taskId);
+                        await updateDoc(taskRef, { dueDate: Timestamp.fromDate(newDueDate), updatedAt: Timestamp.now() });
+                        const taskIndex = allTasks.findIndex(t => t.id === taskId);
+                        if (taskIndex > -1) { allTasks[taskIndex].dueDate = Timestamp.fromDate(newDueDate); }
+                    } catch (error) { console.error("Error updating task due date:", error); alert("Failed to update task date."); info.revert(); }
+                    finally { showLoading(false); }
+                },
+                eventClick: function(info) {
+                    const task = allTasks.find(t => t.id === info.event.id);
+                    if (task) openTaskModal(task);
+                }
+            });
+            calendarInstance.render();
+        }
+        calendarTaskStatusFilter.addEventListener('change', renderCalendarEvents);
+        function renderCalendarEvents() {
+            if (!calendarInstance || !Array.isArray(allTasks)) return;
+            const selectedStatus = calendarTaskStatusFilter.value;
+            const filteredTasks = selectedStatus ? allTasks.filter(task => task.status === selectedStatus) : allTasks;
+            const events = filteredTasks.map(task => {
+                if (!task || !task.dueDate || typeof task.dueDate.toDate !== 'function') return null;
+                const lead = Array.isArray(allLeads) ? allLeads.find(l => l && l.id === task.associatedLeadId) : null;
+                let eventColor = '#007bff';
+                if (task.status === 'Completed') eventColor = '#28a745';
+                else if (task.status === 'In Progress') eventColor = '#ffc107';
+                else if (task.status === 'To Do') eventColor = '#fd7e14'; 
+                return {
+                    id: task.id,
+                    title: `${task.title || 'Untitled'}${lead ? ' ('+ (lead.name ? lead.name.substring(0,10) : 'Lead') +'..)' : ''}`,
+                    start: task.dueDate.toDate(), allDay: true,
+                    backgroundColor: eventColor, borderColor: eventColor
+                };
+            }).filter(event => event !== null);
+            calendarInstance.removeAllEvents();
+            calendarInstance.addEventSource(events);
+        }
+        exportICalButton.addEventListener('click', () => {
+            if (!allTasks || !allTasks.length) { alert("No tasks to export."); return; }
+            const cal = ics();
+            const filteredTasks = calendarTaskStatusFilter.value
+                ? allTasks.filter(task => task.status === calendarTaskStatusFilter.value)
+                : allTasks;
+            filteredTasks.forEach(task => {
+                if (!task || !task.dueDate || typeof task.dueDate.toDate !== 'function') return;
+                const lead = Array.isArray(allLeads) ? allLeads.find(l => l && l.id === task.associatedLeadId) : null;
+                let description = task.description || '';
+                if (lead) description += `\nAssociated Lead: ${lead.name || 'N/A'}`;
+                description += `\nStatus: ${task.status}`;
+                cal.addEvent( task.title || 'Untitled Task', description,
+                    lead ? (lead.name || 'N/A') : 'Dwellverse CRM',
+                    task.dueDate.toDate(), task.dueDate.toDate() );
+            });
+            cal.download("dwellverse_tasks");
+        });
+
+        function renderCustomLegend(legendContainerEl, labels, backgroundColors) {
+            if (!legendContainerEl) return;
+            legendContainerEl.innerHTML = '';
+            if (labels.length === 0 || (labels.length === 1 && labels[0] === "No Data")) {
+                 const noDataItem = document.createElement('div');
+                 noDataItem.className = 'legend-item'; noDataItem.textContent = 'No data available';
+                 legendContainerEl.appendChild(noDataItem); return;
+            }
+            labels.forEach((label, index) => {
+                const color = backgroundColors[index % backgroundColors.length];
+                const legendItem = document.createElement('div'); legendItem.className = 'legend-item';
+                const colorSwatch = document.createElement('span');
+                colorSwatch.className = 'legend-color-swatch'; colorSwatch.style.backgroundColor = color;
+                const labelText = document.createTextNode(label);
+                legendItem.appendChild(colorSwatch); legendItem.appendChild(labelText);
+                legendContainerEl.appendChild(legendItem);
+            });
+        }
+
+        function updateChart(chartInstance, canvasId, dataSet, labelProperty, chartLabel, colors, legendContainerEl) {
+            const ctxEl = document.getElementById(canvasId);
+            if (!ctxEl) { return chartInstance; }
+            const ctx = ctxEl.getContext('2d');
+            const safeDataSet = Array.isArray(dataSet) ? dataSet : [];
+            const counts = safeDataSet.reduce((acc, item) => {
+                if (item && typeof item === 'object' && item.hasOwnProperty(labelProperty)) {
+                    const key = item[labelProperty] || 'Unknown';
+                    acc[key] = (acc[key] || 0) + 1;
+                }
+                return acc;
+            }, {});
+            if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+            const chartLabels = Object.keys(counts).length ? Object.keys(counts) : ["No Data"];
+            const chartValues = Object.keys(counts).length ? Object.values(counts) : [1];
+            const backgroundColorsForChart = Object.keys(counts).length ? colors.slice(0, Object.keys(counts).length) : ['#e9ecef'];
+            const chartData = {
+                labels: chartLabels,
+                datasets: [{
+                    label: chartLabel, data: chartValues,
+                    backgroundColor: backgroundColorsForChart,
+                    borderColor: '#fff', borderWidth: 2, hoverOffset: 8
+                }]
+            };
+            if (legendContainerEl) { renderCustomLegend(legendContainerEl, chartLabels, backgroundColorsForChart); }
+            return new Chart(ctx, {
+                type: 'doughnut', data: chartData,
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '60%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true, backgroundColor: 'rgba(0,0,0,0.8)', titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 12 }, padding: 10, cornerRadius: 6, displayColors: true,
+                            callbacks: {
+                                label: function(tooltipContext) {
+                                    if (tooltipContext.label === "No Data") return "No Data Available";
+                                    const label = tooltipContext.label || ''; const value = tooltipContext.raw || 0;
+                                    const total = tooltipContext.chart.getDatasetMeta(0).total;
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                    return `${label}: ${value} (${percentage})`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, dlContext) => {
+                                if (dlContext.chart.data.labels[dlContext.dataIndex] === "No Data") return '';
+                                return value;
+                            },
+                            color: '#FFFFFF', font: { weight: 'bold', size: 14 },
+                            align: 'center', anchor: 'center'
+                        }
+                    }
+                }
+            });
+        }
+        function updateLeadStatusChart() {
+            const leadColors = ['#007bff', '#ffc107', '#28a745', '#6f42c1', '#fd7e14', '#dc3545', '#6c757d'];
+            leadStatusChartInstance = updateChart(leadStatusChartInstance, 'leadStatusChart', allLeads, 'status', 'Lead Statuses', leadColors, leadStatusCustomLegendEl);
+        }
+        function updateTaskStatusChart() {
+            const taskColors = ['#fd7e14', '#17a2b8', '#20c997']; 
+            taskStatusChartInstance = updateChart(taskStatusChartInstance, 'taskStatusChart', allTasks, 'status', 'Task Statuses', taskColors, taskStatusCustomLegendEl);
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageIdToShow = 'page' + this.dataset.page.charAt(0).toUpperCase() + this.dataset.page.slice(1);
+
+                pageSections.forEach(section => {
+                    section.classList.remove('active-page');
+                });
+
+                const targetPage = document.getElementById(pageIdToShow);
+                if (targetPage) {
+                    targetPage.classList.add('active-page');
+                    if (pageIdToShow === 'pageCalendar' && calendarInstance) {
+                        setTimeout(() => { 
+                            calendarInstance.updateSize();
+                        }, 0);
+                    }
+                } else {
+                    console.warn("Target page section not found:", pageIdToShow);
+                }
+
+                navLinks.forEach(navLink => navLink.classList.remove('active-nav-item'));
+                this.classList.add('active-nav-item');
+            });
+        });
+
+
+        window.onclick = function(event) {
+             if (event.target == leadModal) leadModal.style.display = "none";
+            if (event.target == taskModal) taskModal.style.display = "none";
+        }
+        window.addEventListener('beforeunload', () => {
+             if (leadUnsubscribe) leadUnsubscribe(); if (taskUnsubscribe) taskUnsubscribe();
+        });
+    </script>
+</body>
+</html>
