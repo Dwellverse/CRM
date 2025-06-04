@@ -141,7 +141,7 @@
         .calendar-export-button-container { 
             text-align: center; margin-top: 20px; 
         }
-        .fc-event { cursor: grab !important; } /* Change cursor for draggable events */
+        .fc-event { cursor: grab !important; } 
         .fc-event:active { cursor: grabbing !important; }
 
 
@@ -157,7 +157,7 @@
         .modal-content {
             background-color: #fefefe; margin: 5% auto; 
             padding: 25px; 
-            border: 1px solid #bbb; width: 90%; max-width: 750px; /* Increased max-width for columns */
+            border: 1px solid #bbb; width: 90%; max-width: 750px; 
             border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .close-button { color: #888; float: right; font-size: 30px; font-weight: bold; }
@@ -379,7 +379,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs, doc, setDoc, deleteDoc, onSnapshot, Timestamp, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, doc, setDoc, deleteDoc, onSnapshot, Timestamp, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
         
         Chart.register(ChartDataLabels);
 
@@ -830,7 +830,6 @@
             finally { showLoading(false); }
         }
         
-        // --- MODIFIED: Initialize Calendar with eventDrop ---
         function initializeCalendar() { 
             if (calendarInstance) { calendarInstance.destroy(); calendarInstance = null; } 
             if (!taskCalendarEl) { console.error("Task calendar element not found!"); return; } 
@@ -838,36 +837,31 @@
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listWeek' },
                 events: [], 
-                editable: true, // <<< ENABLED for drag-and-drop
+                editable: true, 
                 selectable: false,
-                eventDrop: async function(info) { // <<< HANDLER for event drop
+                eventDrop: async function(info) { 
                     const taskId = info.event.id;
-                    const newDueDate = info.event.start; // This will be a JS Date object
+                    const newDueDate = info.event.start; 
                     if (!taskId || !newDueDate) {
                         console.error("Task ID or new due date is missing for event drop.");
-                        info.revert(); // Revert the drop on the calendar
+                        info.revert(); 
                         return;
                     }
                     showLoading(true);
                     try {
                         const taskRef = doc(db, `users/${currentUser.uid}/tasks`, taskId);
-                        await setDoc(taskRef, { 
+                        await updateDoc(taskRef, { // Changed to updateDoc for only updating specific fields
                             dueDate: Timestamp.fromDate(newDueDate),
                             updatedAt: Timestamp.now() 
-                        }, { merge: true });
-                        // onSnapshot for tasks will eventually update allTasks and re-render calendar,
-                        // but we can also manually update the specific event in the local allTasks for quicker UI feedback if needed.
+                        });
                         const taskIndex = allTasks.findIndex(t => t.id === taskId);
                         if (taskIndex > -1) {
                             allTasks[taskIndex].dueDate = Timestamp.fromDate(newDueDate);
                         }
-                        // No need to call renderCalendarEvents() here if onSnapshot is working,
-                        // but if there are delays, this would make the UI update faster.
-                        // renderCalendarEvents(); // Optional for immediate visual feedback
                     } catch (error) {
                         console.error("Error updating task due date:", error);
                         alert("Failed to update task date. Please try again.");
-                        info.revert(); // Revert calendar change if Firestore update fails
+                        info.revert(); 
                     } finally {
                         showLoading(false);
                     }
