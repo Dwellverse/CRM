@@ -1,0 +1,46 @@
+﻿<div id="pageTasks" class="tasks-grid-container no-wrapper-style">
+
+    <!-- Main Content Panel for the Task List and Filters -->
+    <div id="tasks-content-panel" class="vision-panel">
+        <div class="vision-panel-header">
+            <h3>All Tasks</h3>
+            <!-- START: Button moved into this container -->
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="filterTaskPageStatus">Status:</label>
+                    <select id="filterTaskPageStatus">
+                        <option value="">All</option>
+                        <option value="To Do">To Do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Past Due">Past Due</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterTaskPageByLead">Lead:</label>
+                    <select id="filterTaskPageByLead">
+                        <option value="">All</option>
+                        <option value="NO_ASSOCIATED_LEAD">No Associated Lead</option>
+                    </select>
+                </div>
+                <button id="showAddTaskFormButtonTasksPage">New Task</button>
+            </div>
+            <!-- END: Button moved -->
+        </div>
+        <div id="tasksGridContainer" class="tasks-list-container">
+            <!-- Task items will be rendered here by JS -->
+        </div>
+    </div>
+
+    <!-- Sidebar Panel for Task Templates -->
+    <aside id="taskTemplatesSidebar" class="vision-panel">
+        <!-- The "New Task" button has been removed from here -->
+        <div class="sidebar-header">
+            <h3>Templates</h3>
+        </div>
+        <div class="sidebar-content">
+            <!-- Template sections will be rendered here by JS -->
+        </div>
+    </aside>
+
+</div>

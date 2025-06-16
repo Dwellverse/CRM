@@ -1,0 +1,269 @@
+﻿/* ============================================================================
+   TASKS PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+/* --- 1. Main Grid Layout --- */
+.tasks-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 340px; /* Flexible main content, fixed sidebar */
+    gap: 1.5rem;
+    height: calc(100vh - 12rem);
+}
+
+#tasks-content-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#taskTemplatesSidebar {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- 2. Panel Headers --- */
+.vision-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border-light);
+    flex-shrink: 0;
+}
+
+.dark-mode .vision-panel-header {
+    border-bottom-color: var(--glass-border-dark);
+}
+
+.vision-panel-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center; /* Vertically align all items */
+    gap: 1.5rem;
+}
+    /* START: Dropdown width fix */
+    .filter-controls .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-controls select {
+        width: 140px; /* Give a consistent width */
+        text-overflow: ellipsis; /* Handle long selected text */
+    }
+/* END: Dropdown width fix */
+
+
+/* --- 3. Task List Styling --- */
+.tasks-list-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.vision-task-item-detailed {
+    display: grid;
+    grid-template-columns: 3fr 2fr 1.5fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    background-color: rgba(0,0,0,0.02);
+    transition: background-color 0.2s;
+}
+
+.dark-mode .vision-task-item-detailed {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.vision-task-item-detailed:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.dark-mode .vision-task-item-detailed:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.vision-task-item-detailed.past-due {
+    border-left: 4px solid var(--accent-red-light);
+}
+
+.dark-mode .vision-task-item-detailed.past-due {
+    border-left-color: var(--accent-red-dark);
+}
+
+.vision-task-item-detailed .task-title {
+    font-weight: 500;
+}
+
+.vision-task-item-detailed .task-lead-name, .vision-task-item-detailed .task-due-date {
+    color: var(--text-secondary-light);
+    font-size: 0.9rem;
+}
+
+.dark-mode .vision-task-item-detailed .task-lead-name, .dark-mode .vision-task-item-detailed .task-due-date {
+    color: var(--text-secondary-dark);
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+    .task-actions .button-glass-subtle {
+        padding: 4px 8px;
+        font-size: 0.85rem;
+    }
+
+/* --- 4. Sidebar Styling --- */
+.sidebar-header {
+    display: flex;
+    justify-content: center; /* Center the title now that the button is gone */
+    align-items: center;
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border-light);
+    flex-shrink: 0;
+}
+
+.dark-mode .sidebar-header {
+    border-bottom-color: var(--glass-border-dark);
+}
+
+.sidebar-header h3 {
+    text-align: center;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.sidebar-content {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.collapsible-section {
+    margin-bottom: 0.5rem;
+}
+
+.collapsible-header {
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+    .collapsible-header:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+.dark-mode .collapsible-header:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.collapsible-header::after {
+    content: '›';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transition: transform 0.3s ease;
+    font-size: 1.5rem;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .collapsible-header::after {
+    color: var(--text-secondary-dark);
+}
+
+.collapsible-header.active::after {
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: transparent;
+}
+
+.template-buttons-container {
+    padding: 0.5rem 0.75rem 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.template-btn {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+    font-weight: 400;
+    border-radius: 8px;
+    background-color: rgba(0,0,0,0.02);
+    border: 1px solid transparent;
+    color: var(--text-secondary-light);
+    box-shadow: none;
+}
+
+.dark-mode .template-btn {
+    background-color: rgba(255,255,255,0.05);
+    color: var(--text-secondary-dark);
+}
+
+.template-btn:hover {
+    background-color: var(--accent-blue-vibrant-light);
+    color: var(--text-primary-light);
+    border-color: var(--accent-blue-light);
+    transform: none;
+    box-shadow: none;
+}
+
+.dark-mode .template-btn:hover {
+    background-color: var(--accent-blue-vibrant-dark);
+    color: var(--text-primary-dark);
+    border-color: var(--accent-blue-dark);
+}
+
+
+/* --- 5. Responsiveness --- */
+@media (max-width: 900px) {
+    .tasks-grid-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .vision-task-item-detailed {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+        padding: 1rem;
+    }
+
+        .vision-task-item-detailed > span {
+            text-align: left !important;
+        }
+
+    .task-actions {
+        justify-content: flex-start;
+        margin-top: 0.5rem;
+    }
+}

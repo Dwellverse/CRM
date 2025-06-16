@@ -1,0 +1,40 @@
+﻿<div id="pageDrip" class="drip-grid-container no-wrapper-style">
+    <div class="drip-controls-section">
+        <h2>Drip Campaign Designer</h2>
+        <p>Visually design automated sequences of emails and tasks. Drag templates from the bottom list into the slots around the circle.</p>
+    </div>
+
+    <!-- Main Designer Canvas -->
+    <div id="dripCampaignDesigner">
+        <div id="dripCircle">
+            <input type="text" id="dripCircleCampaignNameInput" placeholder="Drip Campaign Name">
+            <button id="dripCircleSaveButton">Save Drip</button>
+        </div>
+        <svg id="dripCampaignLines"></svg>
+        <div id="dripCampaignSlots"></div>
+    </div>
+
+    <!-- Template Source List -->
+    <div id="dripTemplateSourceContainer" class="drip-controls-section">
+        <h3>Available Drip Steps (Drag to slots above)</h3>
+        <div id="dripTemplateSourceList"></div>
+    </div>
+
+    <!-- Saved Campaigns Section -->
+    <div id="dripLoadControlsContainer" class="drip-controls-section">
+        <h3>Saved Drip Campaigns</h3>
+        <select id="loadCustomDripSelect">
+            <option value="">-- Load Saved Drip --</option>
+        </select>
+        <div id="savedDripsDisplayGrid"></div>
+    </div>
+
+    <!-- Activation Section -->
+    <div id="dripActivationControls">
+        <h3>Activate Campaign for Lead</h3>
+        <select id="dripUserSelect">
+            <option value="">-- Select a Lead --</option>
+        </select>
+        <button id="activateDripButton">Activate Drip</button>
+    </div>
+</div>

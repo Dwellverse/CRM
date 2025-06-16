@@ -1,0 +1,63 @@
+﻿<div id="pageLeads" class="leads-grid-container no-wrapper-style">
+
+    <!-- Unified Panel Header for all controls -->
+    <div class="vision-panel-header">
+        <div class="header-actions-left">
+            <button id="showAddLeadFormButtonPage">Add Lead</button>
+            <div class="import-dropdown-container">
+                <button id="importLeadsButton">Import</button>
+                <div id="importLeadsDropdown" class="dropdown-menu">
+                    <button id="importLeadsCsvButton">CSV</button>
+                    <button id="importVCardButton">vCard</button>
+                </div>
+            </div>
+        </div>
+        <div class="header-filters-right">
+            <div class="filter-group">
+                <label for="filterLeadPipelineStage">Pipeline:</label>
+                <select id="filterLeadPipelineStage"></select>
+            </div>
+            <div class="filter-group">
+                <label for="filterLeadByTaskStatus">Tasks:</label>
+                <select id="filterLeadByTaskStatus">
+                    <option value="">Any Task Status</option>
+                    <option value="To Do">Has 'To Do'</option>
+                    <option value="In Progress">Has 'In Progress'</option>
+                    <option value="Completed">Has 'Completed'</option>
+                    <option value="HAS_NO_TASKS">Has No Tasks</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterLeadFinancingStatus">Financial:</label>
+                <select id="filterLeadFinancingStatus">
+                    <option value="">All Statuses</option>
+                    <option value="Pre-approved">Pre-approved</option>
+                    <option value="Cash Buyer">Cash Buyer</option>
+                    <option value="Needs Financing">Needs Financing</option>
+                    <option value="Exploring Options">Exploring Options</option>
+                    <option value="N/A">N/A</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file inputs for import functionality -->
+    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+    <input type="file" id="vCardFileInput" accept=".vcf,.vcard" style="display: none;" multiple>
+
+    <!-- Column 1: Lead List Panel -->
+    <div id="leads-list-panel" class="vision-panel">
+        <!-- Lead list items will be rendered here by JS -->
+    </div>
+
+    <!-- Column 2: Lead Detail Panel -->
+    <div id="leads-detail-panel" class="vision-panel">
+        <!-- Full lead details or a default message will be rendered here by JS -->
+    </div>
+
+    <!-- Column 3: Dynamic Content Panel -->
+    <div id="leads-right-panel" class="vision-panel">
+        <!-- Dynamic content (Log, Tasks, Workflow, etc.) will be rendered here by JS -->
+    </div>
+
+</div>

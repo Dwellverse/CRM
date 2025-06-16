@@ -1,0 +1,61 @@
+﻿<div id="pageProfile" class="profile-grid-container no-wrapper-style">
+
+    <div class="profile-header vision-panel">
+        <div id="profilePictureContainer"></div>
+        <div class="profile-header-info">
+            <h2>My Profile</h2>
+            <p>This information is used for your vCard and email signatures.</p>
+        </div>
+        <div class="profile-header-actions">
+            <button id="saveUserProfileButton">Save Profile</button>
+            <button id="exportVCardButton" class="button-glass-subtle">Export vCard</button>
+        </div>
+        <input type="file" id="userProfilePhotoInput" accept="image/png, image/jpeg" style="display: none;">
+    </div>
+
+    <form id="userProfileForm">
+        <div class="vision-panel">
+            <h3>Basic Info</h3>
+            <div class="form-grid-2col">
+                <div class="form-group"><label for="userProfileFullName">Full Name</label><input type="text" id="userProfileFullName"></div>
+                <div class="form-group"><label for="userProfileJobTitle">Job Title / Role</label><input type="text" id="userProfileJobTitle"></div>
+                <div class="form-group"><label for="userProfileCompany">Company / Team</label><input type="text" id="userProfileCompany"></div>
+                <div class="form-group"><label for="userProfileTimezone">Timezone</label><input type="text" id="userProfileTimezone" placeholder="e.g., America/Chicago"></div>
+            </div>
+            <div class="form-group"><label for="userProfileBio">Bio / About Me</label><textarea id="userProfileBio" rows="3"></textarea></div>
+        </div>
+
+        <div class="vision-panel">
+            <h3>Contact Info</h3>
+            <div class="form-grid-2col">
+                <div class="form-group"><label for="userProfileEmail">Work Email</label><input type="email" id="userProfileEmail" readonly></div>
+                <div class="form-group"><label for="userProfilePersonalEmail">Personal Email</label><input type="email" id="userProfilePersonalEmail"></div>
+                <div class="form-group"><label for="userProfilePhone">Mobile Phone</label><input type="tel" id="userProfilePhone"></div>
+                <div class="form-group"><label for="userProfileOfficePhone">Office Phone</label><input type="tel" id="userProfileOfficePhone"></div>
+            </div>
+        </div>
+
+        <div class="vision-panel">
+            <h3>Social Media & Web</h3>
+            <div class="form-grid-2col">
+                <div class="form-group"><label for="userProfileWebsite">Website URL</label><input type="url" id="userProfileWebsite"></div>
+                <div class="form-group"><label for="userProfileCalendly">Booking Link</label><input type="url" id="userProfileCalendly"></div>
+                <div class="form-group"><label for="userProfileInstagram">Instagram</label><input type="text" id="userProfileInstagram" placeholder="@username"></div>
+                <div class="form-group"><label for="userProfileFacebook">Facebook URL</label><input type="url" id="userProfileFacebook"></div>
+                <div class="form-group"><label for="userProfileLinkedIn">LinkedIn URL</label><input type="url" id="userProfileLinkedIn"></div>
+                <div class="form-group"><label for="userProfileTwitter">X / Twitter URL</label><input type="url" id="userProfileTwitter"></div>
+            </div>
+        </div>
+
+        <div class="vision-panel">
+            <h3>Business & License Details</h3>
+            <div class="form-grid-2col">
+                <div class="form-group"><label for="userProfileBrokerage">Brokerage</label><input type="text" id="userProfileBrokerage"></div>
+                <div class="form-group"><label for="userProfileLicenseNumber">License #</label><input type="text" id="userProfileLicenseNumber"></div>
+                <div class="form-group"><label for="userProfileServiceAreas">Service Areas</label><input type="text" id="userProfileServiceAreas" placeholder="e.g., Anytown, Metropolis"></div>
+                <div class="form-group"><label for="userProfileMlsAffiliations">MLS Affiliation(s)</label><input type="text" id="userProfileMlsAffiliations"></div>
+            </div>
+            <div class="form-group"><label for="userProfileSignature">Email Signature</label><textarea id="userProfileSignature" rows="5" placeholder="Paste your full signature here..."></textarea></div>
+        </div>
+    </form>
+</div>

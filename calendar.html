@@ -1,0 +1,92 @@
+﻿<div id="pageCalendar" class="calendar-grid-container no-wrapper-style">
+
+    <!-- Main Content Panel for the Calendar and its controls -->
+    <div id="calendar-content-panel" class="vision-panel">
+        <div class="vision-panel-header">
+            <!-- H3 Title has been removed -->
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="calendarTaskStatusFilter">Status:</label>
+                    <select id="calendarTaskStatusFilter">
+                        <option value="">All Events</option>
+                        <option value="To Do">To Do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="calendarLeadFilter">Lead:</label>
+                    <select id="calendarLeadFilter">
+                        <option value="">All Leads</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="taskCalendar" class="calendar-container">
+            <!-- FullCalendar will be rendered here -->
+        </div>
+        <div class="calendar-footer-actions">
+            <button id="exportICalButton" class="button-glass-subtle">Export Calendar</button>
+        </div>
+    </div>
+
+    <!-- Sidebar Panel for Event Management -->
+    <aside id="calendarSidebar" class="vision-panel">
+        <div class="sidebar-header">
+            <h3>Add Event</h3>
+        </div>
+        <form id="eventForm" class="sidebar-content">
+            <input type="hidden" id="eventFormId">
+            <div class="form-group">
+                <label for="eventFormTitle">Event Title</label>
+                <input type="text" id="eventFormTitle" placeholder="e.g., Showing at 123 Main St">
+            </div>
+
+            <!-- START: CORRECTLY CONSOLIDATED ROWS -->
+            <div class="modal-form-row">
+                <div class="form-group">
+                    <label for="eventFormType">Event Type</label>
+                    <select id="eventFormType">
+                        <option value="Task">General Task</option>
+                        <option value="Appointment">Appointment</option>
+                        <option value="Showing">Showing</option>
+                        <option value="Open House">Open House</option>
+                        <option value="Inspection">Inspection</option>
+                        <option value="Closing">Closing</option>
+                        <option value="Personal">Personal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventFormDate">Date</label>
+                    <input type="date" id="eventFormDate">
+                </div>
+            </div>
+
+            <div class="modal-form-row">
+                <div class="form-group">
+                    <label for="eventFormStartTime">Start Time</label>
+                    <input type="time" id="eventFormStartTime">
+                </div>
+                <div class="form-group">
+                    <label for="eventFormEndTime">End Time</label>
+                    <input type="time" id="eventFormEndTime">
+                </div>
+            </div>
+            <!-- END: CORRECTLY CONSOLIDATED ROWS -->
+
+            <div class="form-group">
+                <label for="eventFormLead">Associated Lead</label>
+                <select id="eventFormLead"><option value="">None</option></select>
+            </div>
+
+            <div class="sidebar-actions">
+                <button type="button" id="saveEventButton">Save Event</button>
+                <div class="sidebar-action-row">
+                    <button type="button" id="clearEventFormButton" class="button-glass-subtle">Clear</button>
+                    <button type="button" id="deleteEventButton" class="button-glass-subtle danger-text" style="display: none;">Delete</button>
+                </div>
+            </div>
+        </form>
+    </aside>
+
+</div>

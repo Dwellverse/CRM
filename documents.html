@@ -1,0 +1,27 @@
+﻿<div id="pageDocuments" class="vision-panel-full-bleed no-wrapper-style">
+    <!-- Panel Header with Integrated Controls -->
+    <div class="vision-panel-header">
+        <h3>Documents</h3>
+        <div class="header-controls-right">
+            <div class="search-group">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="documentSearchInput" placeholder="Search by name, description, or lead...">
+            </div>
+            <div class="filter-group">
+                <label for="documentSortSelect">Sort by:</label>
+                <select id="documentSortSelect">
+                    <option value="date_desc">Date Added (Newest)</option>
+                    <option value="date_asc">Date Added (Oldest)</option>
+                    <option value="name_asc">File Name (A-Z)</option>
+                    <option value="name_desc">File Name (Z-A)</option>
+                </select>
+            </div>
+            <button id="uploadDocumentButton">Add Document</button>
+        </div>
+    </div>
+
+    <!-- Main Content Area for the Document List -->
+    <div id="documentsListContainer" class="document-list-container">
+        <!-- Document list header and rows will be rendered here by JS -->
+    </div>
+</div>

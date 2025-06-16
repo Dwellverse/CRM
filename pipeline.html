@@ -1,0 +1,36 @@
+﻿<div id="pagePipeline" class="vision-panel-full-bleed no-wrapper-style">
+    <!-- Panel Header with Integrated Controls -->
+    <div class="vision-panel-header">
+        <!-- The H2 Title has been removed from here -->
+        <div class="header-controls-right">
+            <div class="filter-group">
+                <input type="text" id="pipelineFilterSearch" placeholder="Search by name...">
+            </div>
+            <div class="filter-group">
+                <label for="pipelineFilterPriority">Priority:</label>
+                <select id="pipelineFilterPriority">
+                    <option value="">All</option>
+                    <option value="Hot">Hot</option>
+                    <option value="Warm">Warm</option>
+                    <option value="Cold">Cold</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="pipelineFilterType">Lead Type:</label>
+                <select id="pipelineFilterType">
+                    <option value="">All</option>
+                    <option value="Buyer">Buyer</option>
+                    <option value="Seller">Seller</option>
+                    <option value="Investor">Investor</option>
+                    <option value="Renter">Renter</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Horizontally Scrolling Board Container -->
+    <div id="pipeline-board-container">
+        <!-- Pipeline columns and cards will be rendered here by JS -->
+    </div>
+</div>

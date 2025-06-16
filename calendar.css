@@ -1,0 +1,165 @@
+﻿/* ============================================================================
+   CALENDAR PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+/* --- 1. Main Grid Layout --- */
+.calendar-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 340px; /* Flexible main content, fixed sidebar */
+    gap: 1.5rem;
+    height: calc(100vh - 12rem);
+}
+
+#calendar-content-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#calendarSidebar {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- 2. Panel Headers & Footers --- */
+.vision-panel-header, .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border-light);
+    flex-shrink: 0;
+}
+
+.dark-mode .vision-panel-header, .dark-mode .sidebar-header {
+    border-bottom-color: var(--glass-border-dark);
+}
+
+.vision-panel-header {
+    justify-content: flex-end; /* Align filters to the right since title is gone */
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+/* START: New footer style */
+.calendar-footer-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--glass-border-light);
+    flex-shrink: 0;
+}
+
+.dark-mode .calendar-footer-actions {
+    border-top-color: var(--glass-border-dark);
+}
+/* END: New footer style */
+
+
+/* --- 3. Calendar Container & Theming --- */
+.calendar-container {
+    flex-grow: 1;
+    min-height: 0; /* Important for flexbox child to shrink */
+}
+
+.fc {
+    --fc-border-color: var(--glass-border-light);
+    --fc-today-bg-color: var(--accent-blue-vibrant-light);
+    --fc-button-bg-color: transparent;
+    --fc-button-text-color: var(--text-primary-light);
+    --fc-button-border-color: var(--button-glass-border-light);
+    --fc-button-hover-bg-color: var(--button-glass-bg-light);
+    --fc-button-hover-border-color: var(--button-glass-border-light);
+    --fc-button-active-bg-color: var(--accent-blue-vibrant-light);
+    --fc-button-active-border-color: var(--accent-blue-light);
+    --fc-event-bg-color: var(--accent-blue-light);
+    --fc-event-border-color: var(--accent-blue-light);
+    --fc-event-text-color: #fff;
+    --fc-list-event-hover-bg-color: rgba(0,0,0,0.05);
+}
+
+.dark-mode .fc {
+    --fc-border-color: var(--glass-border-dark);
+    --fc-today-bg-color: var(--accent-blue-vibrant-dark);
+    --fc-button-text-color: var(--text-primary-dark);
+    --fc-button-border-color: var(--button-glass-border-dark);
+    --fc-button-hover-bg-color: var(--button-glass-bg-dark);
+    --fc-button-hover-border-color: var(--button-glass-border-dark);
+    --fc-button-active-bg-color: var(--accent-blue-vibrant-dark);
+    --fc-button-active-border-color: var(--accent-blue-dark);
+    --fc-list-event-hover-bg-color: rgba(255,255,255,0.1);
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.fc .fc-button {
+    border-radius: 50px !important;
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease;
+}
+
+/* --- 4. Sidebar Styling --- */
+.sidebar-content {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.sidebar-actions {
+    margin-top: auto; /* Push actions to the bottom */
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border-light);
+}
+
+.dark-mode .sidebar-actions {
+    border-top-color: var(--glass-border-dark);
+}
+
+.sidebar-action-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.sidebar-actions button {
+    width: 100%;
+}
+
+.sidebar-action-row .button-glass-subtle {
+    width: auto;
+}
+
+/* --- 5. Responsiveness --- */
+@media (max-width: 900px) {
+    .calendar-grid-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .vision-panel-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+}

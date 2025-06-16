@@ -1,0 +1,334 @@
+﻿/* ============================================================================
+   DRIP CAMPAIGN PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+.drip-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- 1. Top Section: Designer --- */
+#dripCampaignDesigner {
+    min-height: 550px;
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    background-color: var(--button-glass-bg-light);
+    overflow: hidden;
+}
+
+.dark-mode #dripCampaignDesigner {
+    border-color: var(--glass-border-dark);
+    background-color: var(--button-glass-bg-dark);
+}
+
+#dripCircle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blue-light), #8a4fff);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.dark-mode #dripCircle {
+    background: linear-gradient(135deg, var(--accent-blue-dark), #7b46e5);
+}
+
+#dripCircle input[type="text"] {
+    width: calc(100% - 20px);
+    margin: 0 auto 10px auto;
+    font-size: 0.9em;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: var(--text-primary-light);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode #dripCircle input[type="text"] {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-primary-dark);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+#dripCircle button {
+    font-size: 0.9em;
+    padding: 8px 15px;
+    background-color: #fff;
+    color: var(--accent-blue-light);
+    border: none;
+    box-shadow: none;
+}
+
+.dark-mode #dripCircle button {
+    background-color: rgba(0,0,0,0.5);
+    color: var(--accent-blue-dark);
+}
+
+#dripCircle button:hover {
+    background-color: #f0f0f0;
+}
+
+.dark-mode #dripCircle button:hover {
+    background-color: rgba(0,0,0,0.7);
+}
+
+#dripCircle button:disabled {
+    background-color: rgba(255,255,255,0.5);
+    color: var(--text-secondary-light);
+    cursor: not-allowed;
+}
+
+.dark-mode #dripCircle button:disabled {
+    background-color: rgba(0,0,0,0.3);
+    color: var(--text-secondary-dark);
+}
+
+#dripCampaignSlots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.drip-slot {
+    width: 140px;
+    height: 90px;
+    border: 2px dashed var(--glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--text-secondary-light);
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+    padding: 8px;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.dark-mode .drip-slot {
+    border-color: var(--glass-border-dark);
+    color: var(--text-secondary-dark);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.drip-slot.drag-over {
+    background-color: var(--accent-blue-vibrant-light);
+    border-color: var(--accent-blue-light);
+    transform: scale(1.05);
+}
+
+.dark-mode .drip-slot.drag-over {
+    background-color: var(--accent-blue-vibrant-dark);
+    border-color: var(--accent-blue-dark);
+}
+
+.drip-slot .template-name {
+    font-weight: 600;
+    color: var(--text-primary-light);
+    font-size: 0.9em;
+    margin-bottom: 3px;
+    word-break: break-word;
+}
+
+.dark-mode .drip-slot .template-name {
+    color: var(--text-primary-dark);
+}
+
+.drip-slot .template-delay {
+    font-size: 0.8em;
+    color: var(--text-secondary-light);
+    font-weight: 500;
+}
+
+.dark-mode .drip-slot .template-delay {
+    color: var(--text-secondary-dark);
+}
+
+.drip-slot.populated {
+    border-color: var(--accent-blue-light);
+    background-color: var(--accent-blue-vibrant-light);
+}
+
+.dark-mode .drip-slot.populated {
+    border-color: var(--accent-blue-dark);
+    background-color: var(--accent-blue-vibrant-dark);
+}
+
+#dripCampaignLines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+    #dripCampaignLines line {
+        stroke: var(--glass-border-light);
+        stroke-width: 1.5;
+        stroke-dasharray: 4 3;
+    }
+
+.dark-mode #dripCampaignLines line {
+    stroke: var(--glass-border-dark);
+}
+
+
+/* --- 2. Lower Sections: Controls & Lists --- */
+.drip-controls-section,
+#dripActivationControls {
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    padding: 1.5rem;
+}
+
+.dark-mode .drip-controls-section,
+.dark-mode #dripActivationControls {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+#dripActivationControls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+    #dripActivationControls select {
+        min-width: 250px;
+        margin-bottom: 0;
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+#dripTemplateSourceList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.drip-source-template {
+    background-color: var(--glass-bg-light);
+    border: 1px solid var(--glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    cursor: grab;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dark-mode .drip-source-template {
+    background-color: var(--glass-bg-dark);
+    border-color: var(--glass-border-dark);
+}
+
+.drip-source-template:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-color: var(--accent-blue-light);
+}
+
+.dark-mode .drip-source-template:hover {
+    border-color: var(--accent-blue-dark);
+}
+
+.drip-source-template h5 {
+    margin: 0 0 4px 0;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.drip-source-template p {
+    font-size: 0.8em;
+    color: var(--text-secondary-light);
+    margin: 0;
+}
+
+.dark-mode .drip-source-template p {
+    color: var(--text-secondary-dark);
+}
+
+#savedDripsDisplayGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.saved-drip-card {
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    padding: 1rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dark-mode .saved-drip-card {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+.saved-drip-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--accent-blue-light);
+}
+
+.dark-mode .saved-drip-card:hover {
+    border-color: var(--accent-blue-dark);
+}
+
+.saved-drip-card h5 {
+    margin: 0 0 8px 0;
+    font-size: 1em;
+    color: var(--accent-blue-light);
+    font-weight: 600;
+}
+
+.dark-mode .saved-drip-card h5 {
+    color: var(--accent-blue-dark);
+}
+
+.saved-drip-card p {
+    font-size: 0.85em;
+    color: var(--text-secondary-light);
+    margin-bottom: 3px;
+    line-height: 1.4;
+}
+
+.dark-mode .saved-drip-card p {
+    color: var(--text-secondary-dark);
+}

@@ -1,0 +1,477 @@
+﻿/* ============================================================================
+   EMAIL PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+/* --- 1. Main Grid Layout --- */
+.email-grid-container {
+    display: grid;
+    grid-template-columns: 360px 1fr; /* Widen sidebar */
+    grid-template-rows: auto 1fr; /* Header row, content row */
+    grid-template-areas:
+        "workflow workflow"
+        "sidebar composer";
+    gap: 1.5rem;
+    height: calc(100vh - 12rem);
+}
+
+#workflow-panel, #emailTemplatesSidebar, #emailComposerPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent content from spilling out */
+}
+
+#workflow-panel {
+    grid-area: workflow;
+}
+
+#emailTemplatesSidebar {
+    grid-area: sidebar;
+}
+
+#emailComposerPanel {
+    grid-area: composer;
+}
+
+
+/* --- 2. Workflow Panel --- */
+#workflow-panel {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+}
+
+.workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    color: var(--text-secondary-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dark-mode .workflow-step {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+    color: var(--text-secondary-dark);
+}
+
+.workflow-step:hover {
+    color: var(--text-primary-light);
+    background-color: rgba(0,0,0,0.05);
+}
+
+.dark-mode .workflow-step:hover {
+    color: var(--text-primary-dark);
+    background-color: rgba(255,255,255,0.1);
+}
+
+.step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.05);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dark-mode .step-icon {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.step-label {
+    font-weight: 500;
+}
+
+.workflow-step.completed {
+    color: var(--text-primary-light);
+    background-color: var(--accent-blue-vibrant-light);
+    border-color: var(--accent-blue-light);
+}
+
+.dark-mode .workflow-step.completed {
+    color: var(--text-primary-dark);
+    background-color: var(--accent-blue-vibrant-dark);
+    border-color: var(--accent-blue-dark);
+}
+
+.workflow-step.completed .step-icon {
+    background-color: var(--accent-blue-light);
+    color: white;
+}
+
+.dark-mode .workflow-step.completed .step-icon {
+    background-color: var(--accent-blue-dark);
+}
+
+.workflow-step.sending {
+    background-color: #34c759;
+    border-color: #30b553;
+    color: white;
+    animation: pulse 1.5s infinite;
+}
+
+.dark-mode .workflow-step.sending {
+    background-color: #30d158;
+    border-color: #2ab84d;
+}
+
+.workflow-step.sending .step-icon {
+    background-color: white;
+    color: #34c759;
+}
+
+.dark-mode .workflow-step.sending .step-icon {
+    color: #30d158;
+}
+
+.workflow-step.sent-success {
+    background-color: var(--accent-blue-light);
+    border-color: var(--accent-blue-light);
+    color: white;
+}
+
+.dark-mode .workflow-step.sent-success {
+    background-color: var(--accent-blue-dark);
+    border-color: var(--accent-blue-dark);
+}
+
+.workflow-step.sent-success .step-icon {
+    background-color: white;
+    color: var(--accent-blue-light);
+}
+
+.dark-mode .workflow-step.sent-success .step-icon {
+    color: var(--accent-blue-dark);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* --- 3. Composer Panel --- */
+.email-form-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+}
+
+.composer-header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.email-form-container .form-group {
+    margin-bottom: 0;
+}
+
+#emailEditorContainer {
+    flex-grow: 1; /* This will take up the available space */
+    min-height: 0; /* Critical for flexbox to allow shrinking */
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius-subtle);
+    overflow: hidden;
+    border: 1px solid var(--button-glass-border-light);
+}
+
+.dark-mode #emailEditorContainer {
+    border-color: var(--button-glass-border-dark);
+}
+
+#emailToolbar {
+    background-color: var(--button-glass-bg-light);
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--button-glass-border-light);
+    flex-shrink: 0; /* Prevent toolbar from shrinking */
+}
+
+.dark-mode #emailToolbar {
+    background-color: var(--button-glass-bg-dark);
+    border-bottom-color: var(--button-glass-border-dark);
+}
+
+#emailEditor {
+    height: 100%; /* Make editor fill its container */
+}
+
+.ql-container.ql-snow {
+    border: none;
+    font-size: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.ql-editor {
+    padding: 1rem;
+}
+
+.dark-mode .ql-snow .ql-stroke {
+    stroke: var(--text-secondary-dark);
+}
+
+.dark-mode .ql-snow .ql-picker-label {
+    color: var(--text-secondary-dark);
+}
+
+.dark-mode .ql-snow .ql-fill {
+    fill: var(--text-secondary-dark);
+}
+
+.dark-mode .ql-snow .ql-picker.ql-expanded .ql-picker-label {
+    border-color: transparent;
+}
+
+.dark-mode .ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+#emailAttachmentsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.attachment-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+}
+
+.dark-mode .attachment-pill {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+.remove-pill {
+    background: none;
+    border: none;
+    color: var(--text-secondary-light);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    opacity: 0.7;
+}
+
+    .remove-pill:hover {
+        opacity: 1;
+    }
+
+.email-actions-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--glass-border-light);
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.dark-mode .email-actions-footer {
+    border-top-color: var(--glass-border-dark);
+}
+
+.footer-left-actions, .footer-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- 4. Templates Sidebar --- */
+#emailTemplatesSidebar .sidebar-content {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+#emailTemplatesSidebar .sidebar-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border-light);
+}
+
+.dark-mode #emailTemplatesSidebar .sidebar-header {
+    border-bottom-color: var(--glass-border-dark);
+}
+
+#emailTemplatesSidebar h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.collapsible-section {
+    margin-bottom: 0.5rem;
+}
+
+.collapsible-header {
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+    .collapsible-header:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+.dark-mode .collapsible-header:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.collapsible-header::after {
+    content: '›';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transition: transform 0.3s ease;
+    font-size: 1.5rem;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .collapsible-header::after {
+    color: var(--text-secondary-dark);
+}
+
+.collapsible-header.active::after {
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: transparent;
+}
+
+.template-buttons-container {
+    padding: 0.5rem 0.75rem 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.template-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .template-item:hover .template-actions {
+        opacity: 1;
+    }
+
+.template-btn {
+    flex-grow: 1;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+    font-weight: 400;
+    border-radius: 8px;
+    background-color: rgba(0,0,0,0.02);
+    border: 1px solid transparent;
+    color: var(--text-secondary-light);
+    box-shadow: none;
+    white-space: normal; /* Allow text to wrap */
+    line-height: 1.4;
+}
+
+.dark-mode .template-btn {
+    background-color: rgba(255,255,255,0.05);
+    color: var(--text-secondary-dark);
+}
+
+.template-btn:hover {
+    background-color: var(--accent-blue-vibrant-light);
+    color: var(--text-primary-light);
+    border-color: var(--accent-blue-light);
+    transform: none;
+    box-shadow: none;
+}
+
+.dark-mode .template-btn:hover {
+    background-color: var(--accent-blue-vibrant-dark);
+    color: var(--text-primary-dark);
+    border-color: var(--accent-blue-dark);
+}
+
+.template-actions {
+    display: flex;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+    .template-actions button {
+        background: none;
+        border: none;
+        box-shadow: none;
+        color: var(--text-secondary-light);
+        font-size: 1rem;
+        padding: 4px;
+        border-radius: 50%;
+    }
+
+.dark-mode .template-actions button {
+    color: var(--text-secondary-dark);
+}
+
+.template-actions button:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.dark-mode .template-actions button:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* --- 5. Responsiveness --- */
+@media (max-width: 900px) {
+    .email-grid-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "workflow"
+            "composer"
+            "sidebar";
+        height: auto;
+    }
+
+    #workflow-panel {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}

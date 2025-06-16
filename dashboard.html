@@ -1,0 +1,171 @@
+﻿<div id="pageDashboard" class="dashboard-grid no-wrapper-style">
+
+    <!-- Metric Card: Pipeline -->
+    <div class="vision-metric-card">
+        <div class="metric-header">
+            <h3 class="metric-title">Total Leads</h3>
+            <span class="metric-total-value" id="pipeline-metric-value">--</span>
+        </div>
+        <div class="metric-content">
+            <div class="chart-canvas-container">
+                <canvas id="pipeline-chart-canvas"></canvas>
+            </div>
+            <div class="metric-legend-container" id="pipeline-metric-legend"></div>
+        </div>
+    </div>
+
+    <!-- Metric Card: Tasks -->
+    <div class="vision-metric-card">
+        <div class="metric-header">
+            <h3 class="metric-title">Open Tasks</h3>
+            <span class="metric-total-value" id="tasks-metric-value">--</span>
+        </div>
+        <div class="metric-content">
+            <div class="chart-canvas-container">
+                <canvas id="tasks-chart-canvas"></canvas>
+            </div>
+            <div class="metric-legend-container" id="tasks-metric-legend"></div>
+        </div>
+    </div>
+
+    <!-- Metric Card: Budgets -->
+    <div class="vision-metric-card">
+        <div class="metric-header">
+            <h3 class="metric-title">Lead Budgets</h3>
+            <span class="metric-total-value" id="budget-metric-value">--</span>
+        </div>
+        <div class="metric-content">
+            <div class="chart-canvas-container">
+                <canvas id="budget-chart-canvas"></canvas>
+            </div>
+            <div class="metric-legend-container" id="budget-metric-legend"></div>
+        </div>
+    </div>
+
+    <!-- Metric Card: Sources -->
+    <div class="vision-metric-card">
+        <div class="metric-header">
+            <h3 class="metric-title">Lead Sources</h3>
+            <span class="metric-total-value" id="source-metric-value">--</span>
+        </div>
+        <div class="metric-content">
+            <div class="chart-canvas-container">
+                <canvas id="source-chart-canvas"></canvas>
+            </div>
+            <div class="metric-legend-container" id="source-metric-legend"></div>
+        </div>
+    </div>
+
+    <!-- Panel: Quick Add Lead -->
+    <div class="vision-panel quick-add-panel">
+        <h3>Quick Add Lead</h3>
+        <div class="form-group"><label for="quickLeadName">Lead Name:</label><input type="text" id="quickLeadName" placeholder="e.g., Jane Smith"></div>
+        <div class="form-group"><label for="quickLeadEmail">Email:</label><input type="email" id="quickLeadEmail" placeholder="e.g., jane@example.com"></div>
+        <div class="form-group"><label for="quickLeadPhone">Phone Number:</label><input type="tel" id="quickLeadPhone" placeholder="e.g., (555) 123-4567"></div>
+        <div class="form-group">
+            <label for="quickLeadPipelineStage">Pipeline Stage:</label>
+            <select id="quickLeadPipelineStage"></select>
+        </div>
+        <div class="quick-add-actions">
+            <button id="quickAddLeadButton">Add Lead</button>
+            <button id="openAddLeadModalButton" class="button-glass-subtle">Detailed Add</button>
+        </div>
+    </div>
+
+    <!-- Panel: Quick Add Task -->
+    <div class="vision-panel quick-add-panel">
+        <h3>Quick Add Task</h3>
+        <div class="form-group"><label for="quickTaskTitle">Task Title:</label><input type="text" id="quickTaskTitle" placeholder="e.g., Send intro email"></div>
+
+        <!-- START: COMPLETE LIST OF PREMADE TASK BUTTONS RESTORED -->
+        <div class="premade-task-buttons">
+            <button type="button" class="premade-task-btn">Follow Up Call</button>
+            <button type="button" class="premade-task-btn">Send Proposal</button>
+            <button type="button" class="premade-task-btn">Schedule Showing</button>
+            <button type="button" class="premade-task-btn">Client Meeting</button>
+            <button type="button" class="premade-task-btn">Market Research</button>
+            <button type="button" class="premade-task-btn">Prepare CMA</button>
+            <button type="button" class="premade-task-btn">Draft Offer</button>
+            <button type="button" class="premade-task-btn">Listing Agreement</button>
+            <button type="button" class="premade-task-btn">Order Photos</button>
+            <button type="button" class="premade-task-btn">Input MLS Listing</button>
+            <button type="button" class="premade-task-btn">Open House Prep</button>
+            <button type="button" class="premade-task-btn">Negotiate Terms</button>
+            <button type="button" class="premade-task-btn">Inspection Follow-up</button>
+            <button type="button" class="premade-task-btn">Closing Coordination</button>
+            <button type="button" class="premade-task-btn">Post-Closing Follow Up</button>
+            <button type="button" class="premade-task-btn">Send IABS</button>
+        </div>
+        <!-- END: COMPLETE LIST RESTORED -->
+
+        <div class="form-row-condensed">
+            <div class="form-group"><label for="quickTaskDueDate">Due Date:</label><input type="date" id="quickTaskDueDate"></div>
+            <div class="form-group">
+                <label for="quickTaskAssociatedLead">Associated Lead:</label>
+                <select id="quickTaskAssociatedLead"><option value="">None</option></select>
+            </div>
+            <div class="form-group">
+                <label for="quickTaskStatus">Status:</label>
+                <select id="quickTaskStatus">
+                    <option value="To Do">To Do</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="quick-add-actions">
+            <button id="quickAddTaskButton">Add Task</button>
+            <button id="openAddTaskModalButton" class="button-glass-subtle">Detailed Add</button>
+        </div>
+    </div>
+
+    <!-- New Activity Center Grid -->
+    <div class="activity-center-grid">
+        <!-- Left Column: Hot Leads Panel -->
+        <div id="hot-leads-panel" class="vision-panel">
+            <div class="panel-header">
+                <h3>Priority Leads</h3>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="hotLeadsStageFilter">Stage:</label>
+                        <select id="hotLeadsStageFilter"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="hotLeadsFinancialFilter">Financial:</label>
+                        <select id="hotLeadsFinancialFilter">
+                            <option value="">All</option>
+                            <option value="Pre-approved">Pre-approved</option>
+                            <option value="Cash Buyer">Cash Buyer</option>
+                            <option value="Needs Financing">Needs Financing</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="hotLeadsListContainer" class="list-container">
+                <!-- Hot leads list will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Right Column: Current Tasks Panel -->
+        <div id="tasks-panel" class="vision-panel">
+            <div class="panel-header">
+                <h3>Current Tasks</h3>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="filterDashboardTaskStatus">Status:</label>
+                        <select id="filterDashboardTaskStatus">
+                            <option value="">All</option>
+                            <option value="To Do">To Do</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Past Due">Past Due</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboardTasksListContainer" class="list-container">
+                <!-- Task items will be rendered here -->
+            </div>
+        </div>
+    </div>
+</div>

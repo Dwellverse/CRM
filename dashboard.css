@@ -1,0 +1,345 @@
+﻿/* ============================================================================
+   DASHBOARD PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+/* --- 1. Main Grid Layout --- */
+.dashboard-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+        "metric-1 metric-2 metric-3 metric-4"
+        "quick-lead quick-lead quick-task quick-task"
+        "activity activity activity activity"; /* Changed from tasks to activity */
+}
+
+    /* Assign grid areas */
+    .dashboard-grid > .vision-metric-card:nth-of-type(1) {
+        grid-area: metric-1;
+    }
+
+    .dashboard-grid > .vision-metric-card:nth-of-type(2) {
+        grid-area: metric-2;
+    }
+
+    .dashboard-grid > .vision-metric-card:nth-of-type(3) {
+        grid-area: metric-3;
+    }
+
+    .dashboard-grid > .vision-metric-card:nth-of-type(4) {
+        grid-area: metric-4;
+    }
+
+    .dashboard-grid > .quick-add-panel:nth-of-type(5) {
+        grid-area: quick-lead;
+    }
+
+    .dashboard-grid > .quick-add-panel:nth-of-type(6) {
+        grid-area: quick-task;
+    }
+
+    .dashboard-grid > .activity-center-grid {
+        grid-area: activity;
+    }
+/* New grid area */
+
+/* --- 2. Shared Panel Style --- */
+.vision-panel,
+.vision-metric-card {
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    border-radius: var(--border-radius-subtle);
+    padding: 1.5rem;
+    backdrop-filter: blur(calc(var(--blur-intensity) / 2));
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.dark-mode .vision-panel,
+.dark-mode .vision-metric-card {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+/* --- 3. Metric Card Specifics --- */
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.metric-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .metric-title {
+    color: var(--text-secondary-dark);
+}
+
+.metric-total-value {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--text-primary-light);
+}
+
+.dark-mode .metric-total-value {
+    color: var(--text-primary-dark);
+}
+
+.metric-content {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.chart-canvas-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.metric-legend-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.legend-color-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.legend-value {
+    margin-left: auto;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .legend-value {
+    color: var(--text-secondary-dark);
+}
+
+/* --- 4. Quick Add Panel Specifics --- */
+.quick-add-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.premade-task-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.premade-task-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background-color: rgba(0,0,0,0.02);
+    border-color: rgba(0,0,0,0.05);
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .premade-task-btn {
+    background-color: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--text-secondary-dark);
+}
+
+.premade-task-btn:hover {
+    background-color: rgba(0,0,0,0.05);
+    border-color: transparent;
+    color: var(--text-primary-light);
+}
+
+.dark-mode .premade-task-btn:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: var(--text-primary-dark);
+}
+
+.form-row-condensed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+    .form-row-condensed .form-group {
+        margin-bottom: 0;
+    }
+
+/* --- 5. New Activity Center Grid --- */
+.activity-center-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+    .panel-header h3 {
+        margin: 0;
+    }
+
+    .panel-header .filter-controls {
+        display: flex;
+        gap: 1rem;
+    }
+
+.list-container {
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Hot Leads List Item */
+.hot-lead-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background-color: rgba(0,0,0,0.02);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dark-mode .hot-lead-item {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.hot-lead-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.dark-mode .hot-lead-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.hot-lead-item .lead-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.hot-lead-item .lead-name {
+    font-weight: 500;
+}
+
+.hot-lead-item .lead-stage {
+    font-size: 0.85rem;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .hot-lead-item .lead-stage {
+    color: var(--text-secondary-dark);
+}
+
+/* Task List Item */
+.vision-task-item {
+    display: grid;
+    grid-template-columns: 3fr 2fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background-color: rgba(0,0,0,0.02);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dark-mode .vision-task-item {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.vision-task-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.dark-mode .vision-task-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.vision-task-item.past-due {
+    border-left: 4px solid var(--accent-red-light);
+}
+
+.dark-mode .vision-task-item.past-due {
+    border-left-color: var(--accent-red-dark);
+}
+
+.task-title {
+    font-weight: 500;
+}
+
+.task-lead-name, .task-due-date {
+    color: var(--text-secondary-light);
+    font-size: 0.9rem;
+}
+
+.dark-mode .task-lead-name, .dark-mode .task-due-date {
+    color: var(--text-secondary-dark);
+}
+
+.task-status-badge {
+    justify-self: flex-end;
+}
+
+/* --- 6. Responsiveness --- */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "metric-1 metric-2" "metric-3 metric-4" "quick-lead quick-task" "activity activity";
+    }
+}
+
+@media (max-width: 900px) {
+    .activity-center-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: "metric-1" "metric-2" "metric-3" "metric-4" "quick-lead" "quick-task" "activity";
+    }
+
+    .vision-task-item {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .task-status-badge {
+        justify-self: flex-start;
+        margin-top: 0.5rem;
+    }
+}

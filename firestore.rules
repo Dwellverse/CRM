@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the requesting user owns the data
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Rule for the userProfiles collection
+    match /userProfiles/{userId} {
+      // A user can read their own profile and create it if it doesn't exist.
+      // They can only update their own profile.
+      allow read, update: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated();
+    }
+
+    // A single wildcard match for all user-specific data.
+    // This covers leads, tasks, documents, customEmailTemplates, and dripCampaigns.
+    match /users/{userId}/{document=**} {
+        allow read, write, delete: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // ===================================================================
+    // ==   FINAL, SECURE RULE FOR GLOBAL TEMPLATES                     ==
+    // ===================================================================
+    match /systemEmailTemplates/{templateId} {
+      // Any authenticated user can READ the system templates.
+      allow read: if isAuthenticated();
+      
+      // NO ONE can write from the app. Admin manages this in the console.
+      allow write: if false; 
+    }
+    // ===================================================================
+  }
+}  

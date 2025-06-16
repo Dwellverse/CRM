@@ -1,0 +1,82 @@
+﻿<div id="pageEmail" class="email-grid-container no-wrapper-style">
+
+    <!-- Row 1: Workflow Steps -->
+    <div id="workflow-panel" class="vision-panel">
+        <div class="workflow-step" id="workflow-step-lead" title="Select a primary recipient">
+            <span class="step-icon">+</span>
+            <span class="step-label">1. Recipient</span>
+        </div>
+        <div class="workflow-step" id="workflow-step-cc" title="Add CC recipients">
+            <span class="step-icon">+</span>
+            <span class="step-label">2. CC</span>
+        </div>
+        <div class="workflow-step" id="workflow-step-template" title="Write your email or choose a template">
+            <span class="step-icon">+</span>
+            <span class="step-label">3. Compose</span>
+        </div>
+        <div class="workflow-step" id="workflow-step-attach" title="Add attachments">
+            <span class="step-icon">+</span>
+            <span class="step-label">4. Attach</span>
+        </div>
+        <div class="workflow-step" id="workflow-step-send" title="Send the email">
+            <span class="step-icon">→</span>
+            <span class="step-label">5. Send</span>
+        </div>
+    </div>
+
+    <!-- Row 2, Column 1: Templates Sidebar -->
+    <aside id="emailTemplatesSidebar" class="vision-panel">
+        <!-- Sidebar content (Templates) will be rendered here by JS -->
+    </aside>
+
+    <!-- Row 2, Column 2: Email Composer Panel -->
+    <div id="emailComposerPanel" class="vision-panel">
+        <div id="emailFormContainer" class="email-form-container">
+            <input type="file" id="emailAttachmentInput" multiple style="display: none;">
+
+            <div class="composer-header-row">
+                <div class="form-group">
+                    <label for="emailTo">To:</label>
+                    <input type="email" id="emailTo" readonly placeholder="Use the 'Recipient' step">
+                </div>
+                <div class="form-group">
+                    <label for="emailCc">Cc:</label>
+                    <input type="email" id="emailCc" placeholder="Use the 'CC' step">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="emailSubject">Subject:</label>
+                <input type="text" id="emailSubject" placeholder="Your email subject">
+            </div>
+
+            <div id="emailEditorContainer">
+                <div id="emailToolbar"></div>
+                <div id="emailEditor"></div>
+            </div>
+
+            <div id="emailAttachmentsContainer">
+                <!-- Attachment pills will be rendered here by JS -->
+            </div>
+
+            <div id="emailActionsContainer" class="email-actions-footer">
+                <div class="footer-left-actions">
+                    <select id="emailInsertField" class="button-glass-subtle">
+                        <option value="">Insert Field...</option>
+                        <option value="{{lead_name}}">Lead Name</option>
+                        <option value="{{lead_email}}">Lead Email</option>
+                        <option value="{{lead_phone}}">Lead Phone</option>
+                        <option value="{{agent_name}}">My Name</option>
+                        <option value="{{agent_email}}">My Email</option>
+                        <option value="{{agent_phone}}">My Phone</option>
+                    </select>
+                    <button type="button" id="emailInsertSignature" class="button-glass-subtle">Insert Signature</button>
+                </div>
+                <div class="footer-right-actions">
+                    <button id="saveCustomEmailButton" class="button-glass-subtle">Save as Template</button>
+                    <button id="updateCustomEmailButton" class="button-glass-subtle" style="display:none;">Update Template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

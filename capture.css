@@ -1,0 +1,87 @@
+﻿/* ============================================================================
+   CAPTURE PAGE STYLES (Apple Vision Theme)
+   ============================================================================ */
+
+.capture-row-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* --- Row 1: Template Selectors --- */
+.form-selector-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--button-glass-bg-light);
+    border: 1px solid var(--button-glass-border-light);
+    border-radius: var(--border-radius-subtle);
+}
+
+.dark-mode .form-selector-row {
+    background-color: var(--button-glass-bg-dark);
+    border-color: var(--button-glass-border-dark);
+}
+
+.template-selector-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    /* Uses default glass button styles, but we can override */
+    flex-shrink: 0;
+}
+
+    .template-selector-btn.active {
+        background-color: var(--accent-blue-light);
+        color: white;
+        border-color: var(--accent-blue-light);
+    }
+
+.dark-mode .template-selector-btn.active {
+    background-color: var(--accent-blue-dark);
+}
+
+
+/* --- Row 2: Form Display Area --- */
+.form-display-row {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    width: 100%;
+}
+
+.form-display-content {
+    width: 100%;
+    max-width: 800px; /* Set a max-width for the form panel */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-preview-container {
+    overflow-y: auto;
+}
+
+.rendered-capture-form {
+    padding: 1.5rem;
+    border-radius: var(--border-radius-subtle);
+    background-color: rgba(0,0,0,0.02);
+}
+
+.dark-mode .rendered-capture-form {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.code-display-area {
+    display: none;
+    flex-grow: 1;
+    min-height: 150px;
+    font-family: 'SF Mono', 'Menlo', 'monospace';
+    font-size: 0.85rem;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+}
